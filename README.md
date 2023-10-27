@@ -7,4 +7,4 @@
 
 
 ## Next steps
-
+[ ] Outline Task and split them up
