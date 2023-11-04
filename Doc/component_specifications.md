@@ -1,8 +1,14 @@
-# Component #1 
-Name: Data Reformatter\
+# Component #0 
+Name: DataReformatting\
 What it does: Makes input data readable and formatted for better readability\
 Input: .csv files of the Preprocessed Time Series Data\
-Output: .csv files of the Reformatted Time Series Data
+Output: df of the Reformatted Time Series Data
+
+# Component #1 
+Name: DataSmoothing\
+What it does: Removes outlier and apply some smoothing (in time)\
+Input: .csv files of the Reformatted Time Series Data\
+Output: df of the Smoothed Time Series Data
 
 # Component #2
 Name: seasonalityAnalysis\
