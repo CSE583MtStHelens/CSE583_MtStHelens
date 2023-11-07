@@ -1,3 +1,15 @@
+# import all packages you will need
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy
+import scipy.signal
+import datetime
+import glob
+import math
+import sys
+
+
 def calculate_distance(lat1, lat2, lon1, lon2):
     """
     Calculate the distance between two points on the Earth's surface using the Haversine formula.
