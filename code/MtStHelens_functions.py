@@ -1,3 +1,37 @@
+def calculate_distance(lat1, lat2, lon1, lon2):
+    """
+    Calculate the distance between two points on the Earth's surface using the Haversine formula.
+
+    Parameters:
+    lat1 (float): Latitude of the first point in degrees.
+    lat2 (float): Latitude of the second point in degrees.
+    lon1 (float): Longitude of the first point in degrees.
+    lon2 (float): Longitude of the second point in degrees.
+
+    Returns:
+    float: The distance between the two points in kilometers.
+    """
+     
+    # The math module contains a function named
+    # radians which converts from degrees to radians.
+    lon1 = math.radians(lon1)
+    lon2 = math.radians(lon2)
+    lat1 = math.radians(lat1)
+    lat2 = math.radians(lat2)
+      
+    # Haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+ 
+    c = 2 * math.asin(math.sqrt(a))
+    
+    # Radius of earth in kilometers. Use 3956 for miles
+    r = 6371
+      
+    # calculate the result
+    return(c * r)
+
 def read_data(path_file, cols=None):
     '''Reads data from a CSV file, converts it into a Pandas DataFrame, 
     and optionally selects specific column(s) from the DataFrame based on the 'cols' parameter.
