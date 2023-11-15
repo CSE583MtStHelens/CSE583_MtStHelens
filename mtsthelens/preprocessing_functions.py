@@ -84,6 +84,7 @@ def norm(s):
 def read_data(path_file, cols=None):
     '''Reads data from a CSV file, converts it into a Pandas DataFrame, 
     and optionally selects specific column(s) from the DataFrame based on the 'cols' parameter.
+    The time columns need to be labeld as time which will become the DataFrame index.
 
     Args:
         path_file (str): The path to the CSV file to be read.
