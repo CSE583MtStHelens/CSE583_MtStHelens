@@ -77,13 +77,16 @@ def norm(s):
     
     This function takes a numeric array 's' and normalizes it by scaling the values within the range [0, 1]. It calculates the range of the input array by finding the difference between the maximum and minimum values. Then, it scales all values in 's' proportionally to this range, resulting in a new array 's_norm' with values between 0 (minimum) and 1 (maximum).
     """
+
     diff_s = max(s)-min(s)
     s_norm = ((s - min(s))/diff_s)
     return s_norm
 
 def read_data(path_file, cols=None):
-    '''Reads data from a CSV file, converts it into a Pandas DataFrame, 
+    """
+    Reads data from a CSV file, converts it into a Pandas DataFrame, 
     and optionally selects specific column(s) from the DataFrame based on the 'cols' parameter.
+    The time columns need to be labeld as time which will become the DataFrame index.
 
     Args:
         path_file (str): The path to the CSV file to be read.
@@ -109,8 +112,8 @@ def read_data(path_file, cols=None):
         To read and select specific columns by index:
         >>> df = read_data('data.csv', cols=1)
         >>> df = read_data('data.csv', cols=[0, 2, 3])
-
-    '''
+    """
+    
     df = pd.read_csv(path_file)
     df.set_index('time', inplace=True)
     df.index = pd.to_datetime(df.index).tz_localize(None)
