@@ -1,4 +1,4 @@
-name: pygmt
+name: pygmt2
 channels:
   - conda-forge
   - defaults

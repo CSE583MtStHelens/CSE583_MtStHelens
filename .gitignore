@@ -1,5 +1,6 @@
 data/*_extended2.csv
 data/*Zone.Identifier
+data/*.csv
 .DS_Store
 code/__pycache__
 code/.ipynb_checkpoints

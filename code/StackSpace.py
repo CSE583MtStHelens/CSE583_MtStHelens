@@ -1,3 +1,11 @@
+"""
+    In this folder are 16 outputs .csv files for each of the 8 different parameters we were trying to analyze. 
+    For each parameter, there are two types of files, the df_stack_space and the df_yearlyParam. 
+    The df_stack_space is stack(average) all the station data for each year, so there are 22 columns, and each row represents every 10 minutes of input data. 
+    The df_yearlyParam is the statistical outputs, like min, max, mean, etc, of each year's data, which is from each column of the df_stack_space file. 
+    Those two files help us to find potential correlations between the extrusion rate and the spatial seismic data.
+"""
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -95,6 +103,9 @@ def stackInSpace(df_rsam_median):
     return df_median_stackSpace, df_stackSpace_year
 
 def stackSpace_yearParam(df_stackSpace_year):
+    '''
+     The df_yearlyParam is the statistical outputs, like min, max, mean, etc, of each year's data, which is from each column of the df_stack_space file. 
+     '''
     df_yearlyParam_index = pd.Series(['max','min','mean','median'])
     df_yearlyParam = pd.DataFrame(index=df_yearlyParam_index)
     # print(df_yearlyParam)
