@@ -111,8 +111,8 @@ def stackInSpace(df_rsam_median):
     '''
     min_date = df_rsam_median.index.min()
     max_date = df_rsam_median.index.max()
-    min_year = min_date.year()
-    max_year = max_date.year()
+    min_year = min_date.year
+    max_year = max_date.year
     years = range(min_year,max_year)
     df_median_stackSpace = pd.DataFrame()
     df_rsam_median_f = df_rsam_median.fillna(0)
