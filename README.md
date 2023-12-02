@@ -18,10 +18,19 @@ The seismic data collected during the volcanic activity is just one part of a mo
 By addressing these goals, this project aims to contribute to our understanding of seismic and climatic influences on the Mt. St. Helens region, providing valuable insights into volcanic and environmental changes. The analysis mostly bases on originally seismic ground velocity data which are converted in a measure for seismic attenuation. This convertion is not part of this project.
 
 ## Installation
-### Clone the Repository
-- clone the folder ```git clone git@github.com:CSE583MtStHelens/CSE583_MtStHelens.git```
-- ```cd``` to the directory where you have clone the repository untill you see the ```environment.yml```
-- type ```conda env create --file environment.yml```
+### Clone the Repository 
+```python
+git clone git@github.com:CSE583MtStHelens/CSE583_MtStHelens.git
+```
+### Run the example notebook
+```cd``` to the directory where you have clone the repository untill you see the ```environment.yml``` and copy paste the cell below in your termial.
+```python
+conda env create --file environment.yml
+conda activate pygmt2
+jupyter lab
+```
+```cd``` to the directory ```example```
+
 
 ## Data structure
 This project is structured in the way that we have a folder ```code``` where you can find the jupyter notebooks or python scripts. The folder ```data``` contains some example files. In our case we do have .csv files of the preprocessed seismic data. Each file contains the data of one seismic station and one year. The column headers indicate different parameters extracted from seismic time series. The rows represent time windows of 10 minutes. The ```doc``` folder contains some informations about the project.<br>
