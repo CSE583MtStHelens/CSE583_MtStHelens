@@ -29,7 +29,7 @@ def filter_data(stack):
 
     b, a = lowpass(cutoff, fs, order)
     w, h = freqz(b, a, fs=fs, worN=8000) #Frequency response
-    plt.plot(2, 1, 1)
+    plt.plot()
     plt.plot(w, np.abs(h), 'b')
     plt.plot(cutoff, 0.5*np.sqrt(2))
     plt.axvline(cutoff)
