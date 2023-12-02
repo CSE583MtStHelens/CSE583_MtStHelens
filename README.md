@@ -29,7 +29,7 @@ conda env create --file environment.yml
 conda activate pygmt2
 jupyter lab
 ```
-```cd``` to the directory ```example```
+navigate in jupyter lab to the directory ```example```
 
 
 ## Data structure
