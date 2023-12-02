@@ -44,6 +44,47 @@ Some abbreviations:<br>
 - **PGA:** Peak Ground Acceleration is giving you the maximum absolute value in the 10 minute time window after deviate the seismig ground velocity time series.
 - **zsc:** z-score normalization is a technique that scales the measurement point of a feature to have a mean of 0 and a standard deviation of 1. This is done by subtracting the mean of the feature from each measurement point, and then dividing by the standard deviation. We do this in the log-space
 
-## Code strucutre
-
-## Tutorial
+## Repository strucutre
+```bash
+├── LICENSE
+├── README.md
+├── code
+│   ├── __pycache__
+│   │   ├── MtStHelens_functions.cpython-310.pyc
+│   │   ├── StackSpace.cpython-310.pyc
+│   │   └── StackTime.cpython-310.pyc
+│   └── tutorial.ipynb
+├── docs
+│   ├── Seismomech_Technology_Review.pptx
+│   ├── Use_Case.md
+│   ├── User_story.md
+│   ├── component_diagram (2).pdf
+│   └── component_specifications.md
+├── environment.yml
+├── example
+│   ├── Example_Data
+│   │   ├── dome_extrusion.txt
+│   │   ├── example_data_eruption.csv
+│   │   ├── mt_st_helens_activity.txt
+│   │   ├── sta_log_long.txt
+│   │   └── synthetic_data.csv
+│   ├── Example_Tutorial.ipynb
+│   └── __init__.py
+├── mtsthelens
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── manipulation_functions.cpython-310.pyc
+│   │   ├── manipulation_functions.cpython-312.pyc
+│   │   ├── plotting_functions.cpython-310.pyc
+│   │   ├── plotting_functions.cpython-312.pyc
+│   │   └── preprocessing_functions.cpython-312.pyc
+│   ├── manipulation_functions.py
+│   ├── plotting_functions.py
+│   └── preprocessing_functions.py
+└── tests
+    ├── __init__.py
+    ├── manipulation_test.py
+    ├── plotting_test.py
+    └── preprocessing_test.py
+```
