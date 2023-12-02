@@ -69,7 +69,7 @@ def importData_extrusion():
     Diff - the total volume changes since previous photographed date (10^6 m^3)
     '''
     print(os.getcwd())
-    df_dome = pd.read_csv('example/example_data/dome_extrusion.txt', header=0, skiprows=0)
+    df_dome = pd.read_csv('example_data/dome_extrusion.txt', header=0, skiprows=0)
     df_dome.set_index('Date of photography',inplace=True)
     df_dome.index = pd.to_datetime(df_dome.index).tz_localize(None)
     df_dome['diff'] = df_dome['Total volume change(x 106 m3)']-df_dome['Total volume change(x 106 m3)'].shift(1)
@@ -95,7 +95,7 @@ def importData_seismic(input_filename):
     
     '''
     #df_rsam_median = prefcn.read_data('data/'+param_name+'_extended2_long.csv')
-    df_rsam_median = prefcn.read_data('example/example_data/'+input_filename+'.csv')
+    df_rsam_median = prefcn.read_data('example_data/'+input_filename+'.csv')
     print(df_rsam_median)
     return df_rsam_median #df_zscrsam_median, df_dsar_median, df_zscdsar_median, df_rms_median, df_zscrms_median, df_pga_median, df_zscpga_median
 
@@ -148,8 +148,16 @@ def stackSpace_yearParam(df_stackSpace_year, years):
 
 def export_csv(input_filename,df_stackSpace_year,df_yearlyParam):
     # Specify the path and filename for the CSV file
-    csv_file_path_stackSpace = '../CSE583_MtStHelens/example/output/stackSpace'+input_filename+'.csv'
-    csv_file_path_yearlyParam = '../CSE583_MtStHelens/example/output/yearlyParams'+input_filename+'.csv'
+    print(os.getcwd())
+    # Define the output directory
+    output_directory = '../example/output'
+
+    # Create the output directory if it doesn't exist
+    os.makedirs(output_directory, exist_ok=True)
+
+    # Define the file paths for CSV files
+    csv_file_path_stackSpace = os.path.join(output_directory, 'stackSpace' + input_filename + '.csv')
+    csv_file_path_yearlyParam = os.path.join(output_directory, 'yearlyParams' + input_filename + '.csv')
 
     # Save the DataFrame to a CSV file
     df_stackSpace_year.to_csv(csv_file_path_stackSpace, index=True)  
