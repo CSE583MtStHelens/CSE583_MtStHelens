@@ -22,9 +22,7 @@ def filter_data(stack):
         b, a = lowpass(cutoff, fs, order=order)
         return lfilter(b, a, data)
         
-    
     filt_stack = stack.copy()
-    
     order = 6
     fs = 30      #sampling rate
     cutoff = 0.02  #cutoff frequency
