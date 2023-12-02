@@ -22,11 +22,8 @@ def filter_data(stack):
         b, a = lowpass(cutoff, fs, order=order)
         return lfilter(b, a, data)
         
-    filt_stack = np.zeros_like(stack)
-    print(stack.shape)
-    print(filt_stack.shape[1])
-
-    # filt_stack = stack.copy()
+    
+    filt_stack = stack.copy()
     
     order = 6
     fs = 30      #sampling rate
@@ -34,22 +31,22 @@ def filter_data(stack):
 
     b, a = lowpass(cutoff, fs, order)
     w, h = freqz(b, a, fs=fs, worN=8000) #Frequency response
-    plt.subplot(2, 1, 1)
+    plt.plot(2, 1, 1)
     plt.plot(w, np.abs(h), 'b')
     plt.plot(cutoff, 0.5*np.sqrt(2))
     plt.axvline(cutoff)
     plt.xlim(0, 1)
     plt.xlabel('Frequency')
 
-    for j in range (stack.shape[1]):
-            data = stack[:,j]
-            filt = lowp_filter(data, cutoff, fs, order)
-            filt_stack[:,j] = filt
+    # for j in range (stack.shape[1]):
+    #         data = stack[:,j]
+    #         filt = lowp_filter(data, cutoff, fs, order)
+    #         filt_stack[:,j] = filt
 
-    # for column in stack.columns:
-    #     data = stack[column]
-    #     filt = lowp_filter(data, cutoff, fs, order)
-    #     filt_stack[column] = filt
+    for column in stack.columns:
+        data = stack[column]
+        filt = lowp_filter(data, cutoff, fs, order)
+        filt_stack[column] = filt
           
     return filt_stack
 
