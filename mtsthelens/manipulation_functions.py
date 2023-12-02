@@ -25,6 +25,9 @@ def filter_data(stack):
     filt_stack = np.zeros_like(stack)
     print(stack.shape)
     print(filt_stack.shape[1])
+
+    # filt_stack = stack.copy()
+    
     order = 6
     fs = 30      #sampling rate
     cutoff = 0.02  #cutoff frequency
@@ -42,7 +45,12 @@ def filter_data(stack):
             data = stack[:,j]
             filt = lowp_filter(data, cutoff, fs, order)
             filt_stack[:,j] = filt
-            
+
+    # for column in stack.columns:
+    #     data = stack[column]
+    #     filt = lowp_filter(data, cutoff, fs, order)
+    #     filt_stack[column] = filt
+          
     return filt_stack
 
 """
