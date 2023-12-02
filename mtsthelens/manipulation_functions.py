@@ -100,7 +100,7 @@ def importData_seismic(input_filename):
     return df_rsam_median #df_zscrsam_median, df_dsar_median, df_zscdsar_median, df_rms_median, df_zscrms_median, df_pga_median, df_zscpga_median
 
 
-def stackInSpace(df_rsam_median, years):
+def stackInSpace(df_rsam_median):
     '''
     Name: Stacking in Space\
     What it does: Analyses Data accross all stations to potential\
@@ -109,6 +109,11 @@ def stackInSpace(df_rsam_median, years):
     Output: Average Seasonality over all stations, stacked in time series with reasonality removed.\
              Contains a column of maximum and minimum difference per year. Output to .csv file\
     '''
+    min_date = df_rsam_median.index.min()
+    max_date = df_rsam_median.index.max()
+    min_year = min_date.year()
+    max_year = max_date.year()
+    years = range(min_year,max_year)
     df_median_stackSpace = pd.DataFrame()
     df_rsam_median_f = df_rsam_median.fillna(0)
     df_median_stackSpace['df_rsam_median_SS'] = df_rsam_median_f.apply(lambda row: row[row != 0].mean(),axis = 1)
@@ -129,10 +134,13 @@ def stackInSpace(df_rsam_median, years):
     print(df_stackSpace_year)
     return df_median_stackSpace, df_stackSpace_year
 
-def stackSpace_yearParam(df_stackSpace_year, years):
+def stackSpace_yearParam(df_stackSpace_year):
     '''
      The df_yearlyParam is the statistical outputs, like min, max, mean, etc, of each year's data, which is from each column of the df_stack_space file. 
      '''
+    min_year = df_stackSpace_year.columns.min()
+    max_year = df_stackSpace_year.columns.max()
+    years = range(min_year,max_year)
     df_yearlyParam_index = pd.Series(['max','min','mean','median'])
     df_yearlyParam = pd.DataFrame(index=df_yearlyParam_index)
     # print(df_yearlyParam)
