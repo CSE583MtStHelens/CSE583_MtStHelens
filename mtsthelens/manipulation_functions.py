@@ -144,11 +144,7 @@ def stackSpace_yearParam(df_stackSpace_year):
     min_year = df_stackSpace_year.columns.min()
     max_year = df_stackSpace_year.columns.max()
     years = range(min_year,max_year)
-    df_yearlyParam_index = pd.Series(['max','min','mean','median'])
-    df_yearlyParam = pd.DataFrame(index=df_yearlyParam_index)
-    # print(df_yearlyParam)
-    for year in years:
-        df_yearlyParam[str(year)] = 0
+    df_yearlyParam = pd.DataFrame(0,index=pd.Series(['max','min','mean','median']), columns=years)
     for year in years:
         df_yearlyParam[str(year)].loc['max'] = df_stackSpace_year[year].max()
         df_yearlyParam[str(year)].loc['min'] = df_stackSpace_year[year].min()
