@@ -78,7 +78,6 @@ def importData_extrusion():
     df_dome['diff'] = df_dome['Total volume change(x 106 m3)']-df_dome['Total volume change(x 106 m3)'].shift(1)
     return df_dome
 
-
 def importData_seismic(input_filename):
     '''
     Read all the pre-processed seismological data (there are 4 sets of data)
@@ -102,55 +101,27 @@ def importData_seismic(input_filename):
     print(df_rsam_median)
     return df_rsam_median #df_zscrsam_median, df_dsar_median, df_zscdsar_median, df_rms_median, df_zscrms_median, df_pga_median, df_zscpga_median
 
+def stackInTime(df):
+    '''
+    Name: Stacking in Time\
+    What it does: Analyses data over multiple years to find the average seasonality data,\
+            and removes the seasonality trends from the data
+    Input: .csv files of the Reformatted Time Series Data\
+    Output: Average seasonality of each station, stacked in time series with reasonality removed.\
+             Contains a column of maximum and minimum difference per year. Output to .csv file\
+    '''
+    df['year'] = df['time'].dt.year
+    df['month'] = df['time'].dt.month
+    df['day'] = df['time'].dt.day
+    df['hour'] = df['time'].dt.hour
+    df['minute'] = df['time'].dt.minute
 
-# def stackInSpace(df_rsam_median):
-#     '''
-#     Name: Stacking in Space\
-#     What it does: Analyses Data accross all stations to potential\
-#                  find a correlation between the climate and the region over the years.
-#     Input: .csv files of the Reformatted Time Series Data\
-#     Output: Average Seasonality over all stations, stacked in time series with reasonality removed.\
-#              Contains a column of maximum and minimum difference per year. Output to .csv file\
-#     '''
-#     min_date = df_rsam_median.index.min()
-#     max_date = df_rsam_median.index.max()
-#     min_year = min_date.year
-#     max_year = max_date.year
-#     years = range(min_year,max_year)
-#     df_median_stackSpace = pd.DataFrame()
-#     df_rsam_median_f = df_rsam_median.fillna(0)
-#     df_median_stackSpace['df_rsam_median_SS'] = df_rsam_median_f.apply(lambda row: row[row != 0].mean(),axis = 1)
+    # Group by year, month, day, hour, and minute, calculate the mean for each group
+    avg_data = df.groupby(['year', 'month', 'day', 'hour', 'minute'])[df_rsam_median_SS].mean().reset_index()
+    avg_data['datetime'] = pd.to_datetime(avg_data[['year', 'month', 'day', 'hour', 'minute']])
+    avg_data = avg_data[['datetime', df_rsam_median_SS]]
 
-#     df_dict = {} 
-#     for year in years:
-#         df_year = df_median_stackSpace['df_rsam_median_SS'].loc[str(year)] # splits df into samaller df for each year
-#         df_split1 = df_year[df_year.index<datetime.datetime(year,2,28,23,59,59,999)] # inclued dates until 28.2
-#         df_split2 = df_year[df_year.index>datetime.datetime(year,3,1)] # includes dates from 1.3
-#         df_concat = pd.concat([df_split1, df_split2]) # concat so that 29.2 removed
-#         df_dict[year] = df_concat # add shorted years to dict
-#     key_list = [key for key,value in df_dict.items()]
-#     time_list = df_dict[2004].index.strftime('%m/%d %H:%M:%S').to_list()
-#     df_stackSpace_year = pd.DataFrame(index=time_list,columns=key_list)
-#     for key, value in df_dict.items():
-#         df_stackSpace_year[key] = value.to_list()
-#     return df_median_stackSpace, df_stackSpace_year
-
-def df2dict(df):
-    """
-    Input: df along y-axis times
-    Output: dict keys are years and values are 
-    """
-    years = np.unique(df.index.year) # extract all years from time series
-
-    df_dict = {} 
-    for year in years:
-        df_year = df.loc[str(year)] # splits df into samaller df for each year
-        df_split1 = df_year[df_year.index<datetime.datetime(year,2,28,23,59,59,999)] # inclued dates until 28.2
-        df_split2 = df_year[df_year.index>datetime.datetime(year,3,1)] # includes dates from 1.3
-        df_concat = pd.concat([df_split1, df_split2]) # concat so that 29.2 removed
-        df_dict[year] = df_concat # add all stations as df, and years as keys
-    return df_dict
-
+    return avg_data
 
 def stackInSpace(df_rsam_median):
     '''
@@ -161,45 +132,45 @@ def stackInSpace(df_rsam_median):
     Output: Average Seasonality over all stations, stacked in time series with reasonality removed.\
              Contains a column of maximum and minimum difference per year. Output to .csv file\
     '''
+    min_date = df_rsam_median.index.min()
+    max_date = df_rsam_median.index.max()
+    min_year = min_date.year
+    max_year = max_date.year
+    years = range(min_year,max_year)
     df_median_stackSpace = pd.DataFrame()
     df_rsam_median_f = df_rsam_median.fillna(0)
     df_median_stackSpace['df_rsam_median_SS'] = df_rsam_median_f.apply(lambda row: row[row != 0].mean(),axis = 1)
-    print(df_median_stackSpace['df_rsam_median_SS'])
+    #print(df_median_stackSpace)
 
-    df_dict = df2dict(df_median_stackSpace['df_rsam_median_SS']) # brake df up into years and drop 29th feb
-    
+    df_dict = {} 
+    for year in years:
+        df_year = df_median_stackSpace['df_rsam_median_SS'].loc[str(year)] # splits df into samaller df for each year
+        df_split1 = df_year[df_year.index<datetime.datetime(year,2,28,23,59,59,999)] # inclued dates until 28.2
+        df_split2 = df_year[df_year.index>datetime.datetime(year,3,1)] # includes dates from 1.3
+        df_concat = pd.concat([df_split1, df_split2]) # concat so that 29.2 removed
+        df_dict[year] = df_concat # add shorted years to dict
     key_list = [key for key,value in df_dict.items()]
     time_list = df_dict[2004].index.strftime('%m/%d %H:%M:%S').to_list()
-    
     df_stackSpace_year = pd.DataFrame(index=time_list,columns=key_list)
     for key, value in df_dict.items():
         df_stackSpace_year[key] = value.to_list()
+    print(df_stackSpace_year)
     return df_median_stackSpace, df_stackSpace_year
 
 def stackSpace_yearParam(df_stackSpace_year):
     '''
-     The df_yearlyParam is the statistical outputs, like min, max, mean, etc, of each year's data, which is from each column of the input dataframe. 
+     The df_yearlyParam is the statistical outputs, like min, max, mean, etc, of each year's data, which is from each column of the df_stack_space file. 
      '''
-    df_yearlyParam = pd.DataFrame(np.nan,index=pd.Series(['max','min','mean','median']), columns=df_stackSpace_year.columns)
-    for col in df_stackSpace_year.columns:
-        df_yearlyParam[col].loc['max'] = df_stackSpace_year[col].max()
-        df_yearlyParam[col].loc['min'] = df_stackSpace_year[col].min()
-        df_yearlyParam[col].loc['mean'] = df_stackSpace_year[col].mean()
-        df_yearlyParam[col].loc['median'] = df_stackSpace_year[col].median()
-    # if df_stackSpace_year.columns.dtype == 'int64': # if columns are years
-    #     min_year = df_stackSpace_year.columns.min()
-    #     max_year = df_stackSpace_year.columns.max()
-    #     years = range(min_year,max_year+1)
-    #     df_yearlyParam = pd.DataFrame(np.nan,index=pd.Series(['max','min','mean','median']), columns=years)
-        
-    # if df_stackSpace_year.columns.dtype == 'O': # if columns are stations
-    #     df_yearlyParam = pd.DataFrame(np.nan,index=pd.Series(['max','min','mean','median']), columns=df_stackSpace_year.columns)
-        
-    # for col in df_stackSpace_year.columns:
-    #     df_yearlyParam[col].loc['max'] = df_stackSpace_year[col].max()
-    #     df_yearlyParam[col].loc['min'] = df_stackSpace_year[col].min()
-    #     df_yearlyParam[col].loc['mean'] = df_stackSpace_year[col].mean()
-    #     df_yearlyParam[col].loc['median'] = df_stackSpace_year[col].median()
+    min_year = df_stackSpace_year.columns.min()
+    max_year = df_stackSpace_year.columns.max()
+    years = range(min_year,max_year)
+    df_yearlyParam = pd.DataFrame(0,index=pd.Series(['max','min','mean','median']), columns=years)
+    for year in years:
+        df_yearlyParam[str(year)].loc['max'] = df_stackSpace_year[year].max()
+        df_yearlyParam[str(year)].loc['min'] = df_stackSpace_year[year].min()
+        df_yearlyParam[str(year)].loc['mean'] = df_stackSpace_year[year].mean()
+        df_yearlyParam[str(year)].loc['median'] = df_stackSpace_year[year].median()
+    print(df_yearlyParam)
     return df_yearlyParam
 
 def export_csv(input_filename,df_stackSpace_year,df_yearlyParam):
