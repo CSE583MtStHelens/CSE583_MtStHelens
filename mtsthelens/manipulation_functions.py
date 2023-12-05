@@ -151,6 +151,7 @@ def df2dict(df):
         df_dict[year] = df_concat # add all stations as df, and years as keys
     return df_dict
 
+
 def stackInSpace(df_rsam_median):
     '''
     Name: Stacking in Space\
@@ -160,7 +161,6 @@ def stackInSpace(df_rsam_median):
     Output: Average Seasonality over all stations, stacked in time series with reasonality removed.\
              Contains a column of maximum and minimum difference per year. Output to .csv file\
     '''
-
     df_median_stackSpace = pd.DataFrame()
     df_rsam_median_f = df_rsam_median.fillna(0)
     df_median_stackSpace['df_rsam_median_SS'] = df_rsam_median_f.apply(lambda row: row[row != 0].mean(),axis = 1)
@@ -174,7 +174,6 @@ def stackInSpace(df_rsam_median):
     df_stackSpace_year = pd.DataFrame(index=time_list,columns=key_list)
     for key, value in df_dict.items():
         df_stackSpace_year[key] = value.to_list()
-
     return df_median_stackSpace, df_stackSpace_year
 
 def stackSpace_yearParam(df_stackSpace_year):
