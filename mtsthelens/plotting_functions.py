@@ -35,19 +35,12 @@ def plot_stations_map(
     return fig
 
 # Raw Data vs Time Stack
-def plot_time_stack(time_stack: pd.DataFrame):
-    n_stations = time_stack.shape[1]-1
+def plot_stack_vs_raw(stack: pd.DataFrame, raw_data:pd.DataFrame):
+    n_stations = stack.shape[1]
     fig, axes = plt.subplots(nrows=n_stations, ncols=1)
-    for i,col in enumerate(time_stack.columns):
-        time_stack[col].plot(ax=axes[i])
-    return fig
-
-# Raw Data vs Filtered Stack
-def plot_filtered_stack(filtered_stack: pd.DataFrame):
-    n_stations = filtered_stack.shape[1]-1
-    fig, axes = plt.subplots(nrows=n_stations, ncols=1)
-    for i,col in enumerate(filtered_stack.columns):
-        filtered_stack[col].plot(ax=axes[i])
+    for i,col in enumerate(stack.columns):
+        stack[col].plot(ax=axes[i])
+        raw_data[col].plot(ax=axes[i])
     return fig
 
 
@@ -83,12 +76,13 @@ def plot_extrusion(extrusion_data: pd.DataFrame,
         extrusion_data[lava_ext_rate].plot(ax=axes[i])
     return fig
 
-def plot_space_stack(space_stack: pd.DataFrame):
-    # for i, col in enumerate(space_stack.columns):
+def plot_space_stack(space_stack_attr: pd.DataFrame):
+    for i, col in enumerate(space_stack_attr.columns):
+        space_stack_attr.plot
     return
 
 # Animations of Space Stacks with Time
-def amination(region, new_stack: pd.DataFrame = None):
+def amination(region, stations_stack: pd.DataFrame = None):
     fig = pygmt.Figure()
     grid = pygmt.datasets.load_earth_relief(resolution='03s', region=region)
     dgrid = pygmt.grdgradient(grid=grid, radiance=[270, 30])
@@ -96,10 +90,10 @@ def amination(region, new_stack: pd.DataFrame = None):
     fig.grdimage(grid=dgrid, projection="M15c", cmap=True)
     lonmid = (region[0] + region[1])/2
     latmid = (region[2] + region[3])/2 - 10
-    with fig.inset(position="jBR+w6.5c/6.5c+o-2.9c/-.9c"):
-        fig.coast(
-            projection=f"G{lonmid}/{latmid}/60/6.5c", region="g", frame="g",
-            land="gray", water='white')
+    # with fig.inset(position="jBR+w6.5c/6.5c+o-2.9c/-.9c"):
+    #     fig.coast(
+    #         projection=f"G{lonmid}/{latmid}/60/6.5c", region="g", frame="g",
+    #         land="gray", water='white')
         # fig.plot(
         #     x=helen[1], y=helen[0], style="kvolcano/0.33c", fill="red",
         #     pen="black", projection=f"G{lonmid}/{latmid}/60/6.5c")
