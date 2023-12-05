@@ -101,6 +101,19 @@ def importData_seismic(input_filename):
     df_rsam_median = prefcn.read_data('example_data/'+input_filename+'.csv')
     return df_rsam_median #df_zscrsam_median, df_dsar_median, df_zscdsar_median, df_rms_median, df_zscrms_median, df_pga_median, df_zscpga_median
 
+def stackInTime(df):
+    '''
+    Name: Stacking in Time\
+    What it does: Analyses data over multiple years to find the average seasonality data,\
+            and removes the seasonality trends from the data
+    Input: .csv files of the Reformatted Time Series Data\
+    Output: Average seasonality of each station, stacked in time series with reasonality removed.\
+             Contains a column of maximum and minimum difference per year. Output to .csv file\
+    '''
+    grouped_data = df.groupby([df.index.month, df.index.day, df.index.hour, df.index.minute])
+    average_data = grouped_data.mean()
+
+    return average_data
 
 # def stackInSpace(df_rsam_median):
 #     '''
