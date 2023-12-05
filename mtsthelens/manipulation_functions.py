@@ -110,18 +110,10 @@ def stackInTime(df):
     Output: Average seasonality of each station, stacked in time series with reasonality removed.\
              Contains a column of maximum and minimum difference per year. Output to .csv file\
     '''
-    df['year'] = df['time'].dt.year
-    df['month'] = df['time'].dt.month
-    df['day'] = df['time'].dt.day
-    df['hour'] = df['time'].dt.hour
-    df['minute'] = df['time'].dt.minute
+    grouped_data = df.groupby([df.index.month, df.index.day, df.index.hour, df.index.minute])
+    average_data = grouped_data.mean()
 
-    # Group by year, month, day, hour, and minute, calculate the mean for each group
-    avg_data = df.groupby(['year', 'month', 'day', 'hour', 'minute'])[df_rsam_median_SS].mean().reset_index()
-    avg_data['datetime'] = pd.to_datetime(avg_data[['year', 'month', 'day', 'hour', 'minute']])
-    avg_data = avg_data[['datetime', df_rsam_median_SS]]
-
-    return avg_data
+    return average_data
 
 def stackInSpace(df_rsam_median):
     '''
