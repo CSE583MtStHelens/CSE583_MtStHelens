@@ -27,7 +27,7 @@ navigate in jupyter lab to the directory ```example```
 
 
 ## Data structure
-This project is structured in the way that we have a folder ```code``` where you can find the jupyter notebooks or python scripts. The folder ```data``` contains some example files. In our case we do have .csv files of the preprocessed seismic data. Each file contains the data of one seismic station and one year. The column headers indicate different parameters extracted from seismic time series. The rows represent time windows of 10 minutes. The ```doc``` folder contains some informations about the project.<br>
+This project is structured in the way that we have a folder ```mtsthelens``` where you can find the python scripts of all the functions written. The folder ```example``` contains some sampled data and a working tutorial to show how our functions work. In our case we do have .csv files of the preprocessed seismic data. Each file contains the data of one seismic station and one year. The column headers indicate different parameters extracted from seismic time series. The rows represent time windows of 10 minutes. The ```docs``` folder contains some information about the project.<br>
 
 Some abbreviations:<br>
 - **RSAM:** Real-Time Seismic Amplitude Measurement is a measure of **seismic energy**. We get it by taking seismic groud velocity (that is what a seismometer measures) and apply a bandpass filter to end. The filtered time series then is cut into 10 minute long time windows and the mean of the absolute values than is the RSAM. Our example data has three different RSAM time series (RSAM, MF, HF). Each time series is filtered in a different frequency range (2-5 Hz, 4.5-8 Hz, 8-16Hz). These frequency bands are typical for volcano seismology.
