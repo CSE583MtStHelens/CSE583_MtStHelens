@@ -72,34 +72,35 @@ def plot_space_stack(space_stack_attr: pd.DataFrame):
     return
 
 # Animations of Space Stacks with Time
-def amination(stations_stack: dict = None):
+def amination(stations_stack: dict = None, projection: str = "M15c"):
     # for key in stations_stack.keys()
-    max_longitude = stations_stack[2001].loc['longitude'].max()
-    min_longitude = stations_stack[2001].loc['longitude'].min()
-    max_latitude = stations_stack[2001].loc['latitude'].max()
-    min_latitude = stations_stack[2001].loc['latitude'].min()
+    max_longitude = stations_stack[2005].loc['longitude'].max()
+    min_longitude = stations_stack[2005].loc['longitude'].min()
+    max_latitude = stations_stack[2005].loc['latitude'].max()
+    min_latitude = stations_stack[2005].loc['latitude'].min()
     region = [
-    min_longitude - .05,
-    max_longitude + .05,
-    min_latitude - .05,
-    max_latitude + .05,
+    round(min_longitude - .05, 2),
+    round(max_longitude + .05, 2),
+    round(min_latitude - .05, 2),
+    round(max_latitude + .05, 2),
     ]
+    pygmt.makecpt(cmap="gray", series=[-1.5, 0.3, 0.01])
     fig = pygmt.Figure()
     grid = pygmt.datasets.load_earth_relief(resolution='03s', region=region)
     dgrid = pygmt.grdgradient(grid=grid, radiance=[270, 30])
-    fig.basemap(region=region, frame=True)
-    fig.grdimage(grid=dgrid, projection="M15c", cmap=True)
-    # lonmid = (region[0] + region[1])/2
-    # latmid = (region[2] + region[3])/2 - 10
-    # with fig.inset(position="jBR+w6.5c/6.5c+o-2.9c/-.9c"):
-    #     fig.coast(
-    #         projection=f"G{lonmid}/{latmid}/60/6.5c", region="g", frame="g",
-    #         land="gray", water='white')
-        # fig.plot(
-        #     x=helen[1], y=helen[0], style="kvolcano/0.33c", fill="red",
-        #     pen="black", projection=f"G{lonmid}/{latmid}/60/6.5c")
-    return fig
+    fig.basemap(region=region, projection=projection, frame=True)
+    fig.grdimage(grid=dgrid, projection=projection, cmap=True)
+    colormap = "inferno"
+    fig.colorbar(cmap=colormap)
+    for key in stations_stack.keys():
+        # stations = stations_stack[key].columns
+        means = stations_stack[key].loc['mean']
+        longitudes = stations_stack[key].loc['longitude']
+        latitudes = stations_stack[key].loc['latitude']
+        fig.plot(x=longitudes, y=latitudes, fill=means, cmap=colormap, style="i0.75c", frame=True)
+    fig.show()
+    return 
 
 read_dictionary = np.load('../example/example_data/stat_map.npy',allow_pickle='TRUE').item()
-print(read_dictionary)
+# print(read_dictionary)
 amination(stations_stack=read_dictionary)
