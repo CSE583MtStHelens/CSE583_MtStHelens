@@ -112,6 +112,7 @@ def stackInTime(df):
     '''
     grouped_data = df.groupby([df.index.month, df.index.day, df.index.hour, df.index.minute])
     average_data = grouped_data.mean()
+    average_data.index = pd.to_datetime(average_data.index.map(lambda x: f'2000-{x[0]:02d}-{x[1]:02d} {x[2]:02d}:{x[3]:02d}:00'))
 
     return average_data
 
