@@ -5,16 +5,6 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 Mercator = "M15c"
-stats = {'latitude': [46, 47],
-        'longitude': [-122, -123]}
-stats = pd.DataFrame(data=stats)
-region = [
-    stats.longitude.min() - .05,
-    stats.longitude.max() + .05,
-    stats.latitude.min() - .05,
-    stats.latitude.max() + .05,
-]
-helen = (46.191, -122.196)
 
 # Stations Map using PyGMT
 def plot_stations_map(
@@ -82,14 +72,25 @@ def plot_space_stack(space_stack_attr: pd.DataFrame):
     return
 
 # Animations of Space Stacks with Time
-def amination(region, stations_stack: pd.DataFrame = None):
+def amination(stations_stack: dict = None):
+    # for key in stations_stack.keys()
+    max_longitude = stations_stack[2001].loc['longitude'].max()
+    min_longitude = stations_stack[2001].loc['longitude'].min()
+    max_latitude = stations_stack[2001].loc['latitude'].max()
+    min_latitude = stations_stack[2001].loc['latitude'].min()
+    region = [
+    min_longitude - .05,
+    max_longitude + .05,
+    min_latitude - .05,
+    max_latitude + .05,
+    ]
     fig = pygmt.Figure()
     grid = pygmt.datasets.load_earth_relief(resolution='03s', region=region)
     dgrid = pygmt.grdgradient(grid=grid, radiance=[270, 30])
     fig.basemap(region=region, frame=True)
     fig.grdimage(grid=dgrid, projection="M15c", cmap=True)
-    lonmid = (region[0] + region[1])/2
-    latmid = (region[2] + region[3])/2 - 10
+    # lonmid = (region[0] + region[1])/2
+    # latmid = (region[2] + region[3])/2 - 10
     # with fig.inset(position="jBR+w6.5c/6.5c+o-2.9c/-.9c"):
     #     fig.coast(
     #         projection=f"G{lonmid}/{latmid}/60/6.5c", region="g", frame="g",
@@ -99,4 +100,6 @@ def amination(region, stations_stack: pd.DataFrame = None):
         #     pen="black", projection=f"G{lonmid}/{latmid}/60/6.5c")
     return fig
 
-amination(region=region)
+read_dictionary = np.load('../example/example_data/stat_map.npy',allow_pickle='TRUE').item()
+print(read_dictionary)
+amination(stations_stack=read_dictionary)

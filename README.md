@@ -42,12 +42,6 @@ Some abbreviations:<br>
 ```bash
 ├── LICENSE
 ├── README.md
-├── code
-│   ├── __pycache__
-│   │   ├── MtStHelens_functions.cpython-310.pyc
-│   │   ├── StackSpace.cpython-310.pyc
-│   │   └── StackTime.cpython-310.pyc
-│   └── tutorial.ipynb
 ├── docs
 │   ├── Seismomech_Technology_Review.pptx
 │   ├── Use_Case.md
@@ -56,17 +50,16 @@ Some abbreviations:<br>
 │   └── component_specifications.md
 ├── environment.yml
 ├── example
-│   ├── Example_Data
+│   ├── example_data
 │   │   ├── dome_extrusion.txt
 │   │   ├── example_data_eruption.csv
 │   │   ├── mt_st_helens_activity.txt
 │   │   ├── sta_log_long.txt
 │   │   └── synthetic_data.csv
-│   ├── Example_Tutorial.ipynb
+│   ├── example_tutorial.ipynb
 │   └── __init__.py
 ├── mtsthelens
 │   ├── __init__.py
-│   ├── __pycache__
 │   │   ├── __init__.cpython-312.pyc
 │   │   ├── manipulation_functions.cpython-310.pyc
 │   │   ├── manipulation_functions.cpython-312.pyc
