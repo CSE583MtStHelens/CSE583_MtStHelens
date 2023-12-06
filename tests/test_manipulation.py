@@ -48,8 +48,9 @@ class Test_mf(unittest.TestCase):
         df = pd.DataFrame({
             'Station1': np.random.randn(len(dates)),
             'Station2': 100 * np.random.randn(len(dates)) - 50,
-            'Station3': np.random.randn(len(dates) - 10),
+            'Station3': np.random.randn(len(dates)),
         }, index=dates)
+        df['Station3']['2004-01-05 09:30:40'] = None
         df_copy = df.copy()
 
         # Test if the function runs without errors
