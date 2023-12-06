@@ -36,6 +36,36 @@ class Test_mf(unittest.TestCase):
         df_median_stackSpace, df_stackSpace_year = mf.stackInSpace(df_rsam_median)
         df_yearlyParam = mf.stackSpace_yearParam(df_stackSpace_year)
 
+    def test_stack_in_time(self):
+        """
+        Test the stackInTime function 
+        Creates synthetic data and tests whether the funciton runs without errors
+        Tests for negative data, and some stations lacking all the data
+        Ensures that the type and shape of the output data is as expected and that the original df is unaltered
+        """
+        # Create a sample DataFrame for testing
+        dates = pd.date_range(start='2001-01-01', end='2004-01-05', freq='10T')
+        df = pd.DataFrame({
+            'Station1': np.random.randn(len(dates)),
+            'Station2': 100 * np.random.randn(len(dates)) - 50,
+            'Station3': np.random.randn(len(dates) - 10),
+        }, index=dates)
+        df_copy = df.copy()
+
+        # Test if the function runs without errors
+        seasonal_data, data_no_seasonal = mf.stackInTime(df)
+
+        # Check if the output types are as expected
+        self.assertIsInstance(seasonal_data, pd.DataFrame)
+        self.assertIsInstance(data_no_seasonal, pd.DataFrame)
+
+        # Check if the output DataFrames have the correct shape
+        self.assertEqual(seasonal_data.shape, (24 * 6 * 365, 3))  #  24 hours * 6 10-minute intervals * 365 days
+        self.assertEqual(data_no_seasonal.shape, df.shape)
+
+        # Check if the input DataFrame is not modified
+        self.assertTrue(df.equals(df_copy))
+
     def test_stackInSpace(self):
         """
         Test the stackInSpace function 
