@@ -106,15 +106,18 @@ def stackInTime(df):
     Name: Stacking in Time\
     What it does: Analyses data over multiple years to find the average seasonality data,\
             and removes the seasonality trends from the data
-    Input: .csv files of the Reformatted Time Series Data\
-    Output: Average seasonality of each station, stacked in time series with reasonality removed.\
-             Contains a column of maximum and minimum difference per year. Output to .csv file\
+    Input: pandas dataframe of the reformatted time series data\
+    Output: Average seasonality of each station, data from each station with seasonality removed\
     '''
     grouped_data = df.groupby([df.index.month, df.index.day, df.index.hour, df.index.minute])
-    average_data = grouped_data.mean()
-    average_data.index = pd.to_datetime(average_data.index.map(lambda x: f'2000-{x[0]:02d}-{x[1]:02d} {x[2]:02d}:{x[3]:02d}:00'))
+    seasonal_data = grouped_data.mean()
+    seasonal_data.index = pd.to_datetime(seasonal_data.index.map(lambda x: f'2000-{x[0]:02d}-{x[1]:02d} {x[2]:02d}:{x[3]:02d}:00'))
 
-    return average_data
+    data_no_seasonal = df.copy()
+    modified_index = pd.to_datetime(df.index.map(lambda x: f'2000-{x.month:02d}-{x.day:02d} {x.hour:02d}:{x.minute:02d}:00'))
+    data_no_seasonal = data_no_seasonal - seasonal_data.loc[modified_index].values
+
+    return seasonal_data, data_no_seasonal
 
 # def stackInSpace(df_rsam_median):
 #     '''
