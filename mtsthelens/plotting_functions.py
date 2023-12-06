@@ -71,6 +71,8 @@ def plot_space_stack(space_stack_attr: pd.DataFrame):
         space_stack_attr.plot
     return
 
+import pygmt
+
 # Animations of Space Stacks with Time
 def amination(stations_stack: dict = None, projection: str = "M15c"):
     # for key in stations_stack.keys()
@@ -90,14 +92,20 @@ def amination(stations_stack: dict = None, projection: str = "M15c"):
     dgrid = pygmt.grdgradient(grid=grid, radiance=[270, 30])
     fig.basemap(region=region, projection=projection, frame=True)
     fig.grdimage(grid=dgrid, projection=projection, cmap=True)
+    
     colormap = "inferno"
-    fig.colorbar(cmap=colormap)
+    pygmt.makecpt(cmap=colormap, series=[0, 5])
+    # pygmt.makecpt(cmap=colormap, series=[0, 5, 1])
+    fig.text(x=-122.33, y=46.39, text="2022", font="22p,Helvetica-Bold,White")
+    
     for key in stations_stack.keys():
         # stations = stations_stack[key].columns
         means = stations_stack[key].loc['mean']
         longitudes = stations_stack[key].loc['longitude']
         latitudes = stations_stack[key].loc['latitude']
-        fig.plot(x=longitudes, y=latitudes, fill=means, cmap=colormap, style="i0.75c", frame=True)
+        fig.plot(x=longitudes, y=latitudes, fill=means, cmap=True, style="i0.75c", frame=True)
+    fig.colorbar(frame='af+l"DSAR"')
+
     fig.show()
     return 
 
