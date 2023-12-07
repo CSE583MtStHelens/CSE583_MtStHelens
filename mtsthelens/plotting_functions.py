@@ -158,7 +158,7 @@ def map_plot(df: pd.DataFrame = None,
     fig.savefig(output_directory + f'{parameter}_{key}.png')
     return
 
-
+#bjbfwhfijnihf
 def animation(read_dictionary: dict = None, parameter: str = None, colormap: str = None):
     min_df, max_df = MinMax4plotting(read_dictionary)
     df_min_max = pd.DataFrame(columns=['minimum','maximum'])
