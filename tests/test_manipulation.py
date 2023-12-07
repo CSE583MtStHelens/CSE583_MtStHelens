@@ -14,7 +14,7 @@ parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 sys.path.insert(0, parent_directory)
 from mtsthelens import manipulation_functions
 
-class Test_mf(unittest.TestCase):
+class Test_Manipulation(unittest.TestCase):
     def test_smoke_manipulation(self):
         """
         Test the two manipuation functions: stackSpace and StackSpace_yearlyParam will run
@@ -49,7 +49,7 @@ class Test_mf(unittest.TestCase):
         df_copy = df.copy()
 
         # Test if the function runs without errors
-        seasonal_data, data_no_seasonal = mf.stackInTime(df)
+        seasonal_data, data_no_seasonal = manipulation_functions.stackInTime(df)
 
         # Check if the output types are as expected
         self.assertIsInstance(seasonal_data, pd.DataFrame)
@@ -75,7 +75,7 @@ class Test_mf(unittest.TestCase):
         df_rsam_median = pd.DataFrame(data, index=pd.date_range('2004-01-01', periods=100, freq='D'))
 
         # Apply the stackInSpace function
-        df_median_stackSpace, df_stackSpace_year = mf.stackInSpace(df_rsam_median)
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(df_rsam_median)
 
         # Check if the shape of the stacked DataFrame is correct
         expected_shape = (100, 1)  # Stacking across all stations should result in one column
@@ -98,7 +98,7 @@ class Test_mf(unittest.TestCase):
         df_stackSpace_year = pd.DataFrame(data, index=['01/01 00:00:00', '01/01 01:00:00', '01/01 02:00:00', '01/01 03:00:00'])
 
         # Test if the function returns a DataFrame with the correct shape
-        df_result = mf.stackSpace_yearParam(df_stackSpace_year)
+        df_result = manipulation_functions.stackSpace_yearParam(df_stackSpace_year)
 
         self.assertIsInstance(df_result, pd.DataFrame)
         self.assertEqual(df_result.shape, (4, 3))  # Adjust the shape based on your expectations
