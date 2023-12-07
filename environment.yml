@@ -77,7 +77,6 @@ dependencies:
   - libexpat=2.5.0=hcb278e6_1
   - libffi=3.4.4=h6a678d5_0
   - libgcc-ng=13.2.0=h807b86a_3
-  - libgdal=3.8.0=he7dcfe9_6
   - libgfortran-ng=13.2.0=h69a702a_3
   - libgfortran5=13.2.0=ha4646dd_3
   - libglib=2.78.2=h783c2da_0
@@ -93,7 +92,6 @@ dependencies:
   - libnsl=2.0.1=hd590300_0
   - libopenblas=0.3.25=pthreads_h413a1c8_0
   - libpng=1.6.39=h5eee18b_0
-  - libpq=16.1=hfc447b1_2
   - libprotobuf=4.24.4=hf27288f_0
   - libre2-11=2023.06.02=h7a70373_0
   - librttopo=1.1.0=h8917695_15
@@ -106,7 +104,6 @@ dependencies:
   - libuuid=2.38.1=h0b41bf4_0
   - libwebp-base=1.3.2=h5eee18b_0
   - libxcb=1.15=h7f8727e_0
-  - libxml2=2.11.6=h232c23b_0
   - libzip=1.10.1=h2629f0a_3
   - libzlib=1.2.13=hd590300_5
   - lz4-c=1.9.4=h6a678d5_0
@@ -122,7 +119,6 @@ dependencies:
   - numpy=1.26.2=py312h2809609_0
   - numpy-base=1.26.2=py312he1a6c75_0
   - openjpeg=2.5.0=h488ebb8_3
-  - openssl=3.2.0=hd590300_1
   - packaging=23.2=pyhd8ed1ab_0
   - pandas=2.1.3=py312hfb8ada1_0
   - parso=0.8.3=pyhd3eb1b0_0
@@ -135,7 +131,6 @@ dependencies:
   - platformdirs=4.0.0=pyhd8ed1ab_0
   - poppler=23.11.0=h590f24d_0
   - poppler-data=0.4.12=hd8ed1ab_0
-  - postgresql=16.1=h8972f4a_2
   - proj=9.3.0=h1d62c97_2
   - prompt-toolkit=3.0.41=pyha770c72_0
   - psutil=5.9.5=py312h98912ed_1
