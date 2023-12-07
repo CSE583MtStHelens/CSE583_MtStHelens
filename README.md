@@ -25,9 +25,26 @@ jupyter lab
 ```
 navigate in jupyter lab to the directory ```example```
 
+### Create the animation
+#### Linux
+```python
+sudo apt-get install imagemagick
+```
+#### Mac
+This will first install brew wand then install ```imagemagick```.
+```python
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install imagemagick
+```
+
+```cd``` to de directory where you have saved the ```.png``` files
+```python
+convert -delay 30 -loop 0 *.png myvideo.gif
+```
+
 
 ## Data structure
-This project is structured in the way that we have a folder ```code``` where you can find the jupyter notebooks or python scripts. The folder ```data``` contains some example files. In our case we do have .csv files of the preprocessed seismic data. Each file contains the data of one seismic station and one year. The column headers indicate different parameters extracted from seismic time series. The rows represent time windows of 10 minutes. The ```doc``` folder contains some informations about the project.<br>
+This project is structured in the way that we have a folder ```mtsthelens``` where you can find the python scripts of all the functions written. The folder ```example``` contains some sampled data and a working tutorial to show how our functions work. In our case we do have .csv files of the preprocessed seismic data. Each file contains the data of one seismic station and one year. The column headers indicate different parameters extracted from seismic time series. The rows represent time windows of 10 minutes. The ```docs``` folder contains some information about the project.<br>
 
 Some abbreviations:<br>
 - **RSAM:** Real-Time Seismic Amplitude Measurement is a measure of **seismic energy**. We get it by taking seismic groud velocity (that is what a seismometer measures) and apply a bandpass filter to end. The filtered time series then is cut into 10 minute long time windows and the mean of the absolute values than is the RSAM. Our example data has three different RSAM time series (RSAM, MF, HF). Each time series is filtered in a different frequency range (2-5 Hz, 4.5-8 Hz, 8-16Hz). These frequency bands are typical for volcano seismology.
@@ -42,12 +59,6 @@ Some abbreviations:<br>
 ```bash
 ├── LICENSE
 ├── README.md
-├── code
-│   ├── __pycache__
-│   │   ├── MtStHelens_functions.cpython-310.pyc
-│   │   ├── StackSpace.cpython-310.pyc
-│   │   └── StackTime.cpython-310.pyc
-│   └── tutorial.ipynb
 ├── docs
 │   ├── Seismomech_Technology_Review.pptx
 │   ├── Use_Case.md
@@ -56,17 +67,16 @@ Some abbreviations:<br>
 │   └── component_specifications.md
 ├── environment.yml
 ├── example
-│   ├── Example_Data
+│   ├── example_data
 │   │   ├── dome_extrusion.txt
 │   │   ├── example_data_eruption.csv
 │   │   ├── mt_st_helens_activity.txt
 │   │   ├── sta_log_long.txt
 │   │   └── synthetic_data.csv
-│   ├── Example_Tutorial.ipynb
+│   ├── example_tutorial.ipynb
 │   └── __init__.py
 ├── mtsthelens
 │   ├── __init__.py
-│   ├── __pycache__
 │   │   ├── __init__.cpython-312.pyc
 │   │   ├── manipulation_functions.cpython-310.pyc
 │   │   ├── manipulation_functions.cpython-312.pyc

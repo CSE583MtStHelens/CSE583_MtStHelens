@@ -99,9 +99,25 @@ def importData_seismic(input_filename):
     '''
     #df_rsam_median = prefcn.read_data('data/'+param_name+'_extended2_long.csv')
     df_rsam_median = prefcn.read_data('example_data/'+input_filename+'.csv')
-    print(df_rsam_median)
     return df_rsam_median #df_zscrsam_median, df_dsar_median, df_zscdsar_median, df_rms_median, df_zscrms_median, df_pga_median, df_zscpga_median
 
+def stackInTime(df):
+    '''
+    Name: Stacking in Time\
+    What it does: Analyses data over multiple years to find the average seasonality data,\
+            and removes the seasonality trends from the data
+    Input: pandas dataframe of the reformatted time series data\
+    Output: Average seasonality of each station, data from each station with seasonality removed\
+    '''
+    grouped_data = df.groupby([df.index.month, df.index.day, df.index.hour, df.index.minute])
+    seasonal_data = grouped_data.mean()
+    seasonal_data.index = pd.to_datetime(seasonal_data.index.map(lambda x: f'2000-{x[0]:02d}-{x[1]:02d} {x[2]:02d}:{x[3]:02d}:00'))
+
+    data_no_seasonal = df.copy()
+    modified_index = pd.to_datetime(df.index.map(lambda x: f'2000-{x.month:02d}-{x.day:02d} {x.hour:02d}:{x.minute:02d}:00'))
+    data_no_seasonal = data_no_seasonal - seasonal_data.loc[modified_index].values
+
+    return seasonal_data, data_no_seasonal
 
 # def stackInSpace(df_rsam_median):
 #     '''
@@ -164,7 +180,6 @@ def stackInSpace(df_rsam_median):
     df_median_stackSpace = pd.DataFrame()
     df_rsam_median_f = df_rsam_median.fillna(0)
     df_median_stackSpace['df_rsam_median_SS'] = df_rsam_median_f.apply(lambda row: row[row != 0].mean(),axis = 1)
-    print(df_median_stackSpace['df_rsam_median_SS'])
 
     df_dict = df2dict(df_median_stackSpace['df_rsam_median_SS']) # brake df up into years and drop 29th feb
     
@@ -202,7 +217,7 @@ def stackSpace_yearParam(df_stackSpace_year):
     #     df_yearlyParam[col].loc['median'] = df_stackSpace_year[col].median()
     return df_yearlyParam
 
-def export_csv(input_filename,df_stackSpace_year,df_yearlyParam):
+def export_csv(input_filename,df):
     # Specify the path and filename for the CSV file
     print(os.getcwd())
     # Define the output directory
@@ -212,14 +227,11 @@ def export_csv(input_filename,df_stackSpace_year,df_yearlyParam):
     os.makedirs(output_directory, exist_ok=True)
 
     # Define the file paths for CSV files
-    csv_file_path_stackSpace = os.path.join(output_directory, 'stackSpace' + input_filename + '.csv')
-    csv_file_path_yearlyParam = os.path.join(output_directory, 'yearlyParams' + input_filename + '.csv')
+    csv_file_path = os.path.join(output_directory, input_filename + '.csv')
 
     # Save the DataFrame to a CSV file
-    df_stackSpace_year.to_csv(csv_file_path_stackSpace, index=True)  
-    print(df_stackSpace_year)
-    # Set index=False to exclude the index column in the CSV file
-    df_yearlyParam.to_csv(csv_file_path_yearlyParam, index=True)
+    df.to_csv(csv_file_path, index=True)  
+
 
 
 
