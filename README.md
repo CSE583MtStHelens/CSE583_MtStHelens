@@ -26,9 +26,17 @@ jupyter lab
 navigate in jupyter lab to the directory ```example```
 
 ### Create the animation
+#### Linux
+```python
+sudo apt-get install imagemagick
+```
+#### Mac
+```python
+brew install imagemagick
+```
+
 ```cd``` to de directory where you have saved the ```.png``` files
 ```python
-conda activate pygmt2
 convert -delay 30 -loop 0 *.png myvideo.gif
 ```
 
