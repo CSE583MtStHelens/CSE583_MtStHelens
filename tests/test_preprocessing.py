@@ -2,7 +2,6 @@ import unittest
 import numpy as np
 import sys
 sys.path.append('')
-import knn
 
 #This script includes 8 test to test the knn_regression function.
 # To run the test navigate into the directory hw3-koepflma
