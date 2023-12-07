@@ -5,14 +5,9 @@ import numpy as np
 from scipy.signal import butter, lfilter, freqz
 import pandas as pd
 import matplotlib.pyplot as plt
-import scipy
-import scipy.signal
 import datetime
-import glob
-import math
-import sys,os
+import sys
 sys.path.append('../CSE583_MtStHelens')
-from mtsthelens import preprocessing_functions as prefcn
 
 def filter_data(stack):
 
