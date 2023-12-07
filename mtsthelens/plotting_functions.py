@@ -34,6 +34,13 @@ def plot_stack_vs_raw(stack: pd.DataFrame, raw_data:pd.DataFrame):
         raw_data[col].plot(ax=axes[i])
     return fig
 
+def plot_space_stack(yearly_params: pd.DataFrame):
+    fig = plt.figure()
+    plt.plot(yearly_params.columns, yearly_params.loc['mean'], marker='.')
+    plt.plot(yearly_params.columns, yearly_params.loc['min'], marker='*')
+    plt.plot(yearly_params.columns, yearly_params.loc['max'], marker='x')
+    plt.plot(yearly_params.columns, yearly_params.loc['median'], marker='o')
+    return fig
 
 # Extrusion Rate
 def plot_extrusion(extrusion_data: pd.DataFrame,
@@ -75,39 +82,7 @@ def plot_space_stack(space_stack_attr: pd.DataFrame):
 
 
 
-# Animations of Space Stacks with Time
-def map_plot(df: pd.DataFrame = None, color_min_max: list = None, parameter: str = None, region: list = None, projection: str = "M15c"):
-
-    # load base map and transfer to hillshade
-    pygmt.makecpt(cmap="gray", series=[-1.5, 0.3, 0.01])
-    fig = pygmt.Figure()
-    grid = pygmt.datasets.load_earth_relief(resolution='03s', region=region)
-    dgrid = pygmt.grdgradient(grid=grid, radiance=[270, 30])
-    fig.basemap(region=region, projection=projection, frame=True)
-    fig.grdimage(grid=dgrid, projection=projection, cmap=True)
-    
-    colormap = "inferno"
-    pygmt.makecpt(cmap=colormap, series=color_min_max)
-    # pygmt.makecpt(cmap=colormap, series=[0, 5, 1])
-    fig.text(x=-122.33, y=46.39, text="2022", font="22p,Helvetica-Bold,White")
-    
-    for key in stations_stack.keys():
-        # stations = stations_stack[key].columns
-        means = stations_stack[key].loc['mean']
-        longitudes = stations_stack[key].loc['longitude']
-        latitudes = stations_stack[key].loc['latitude']
-        fig.plot(x=longitudes, y=latitudes, fill=means, cmap=True, style="i0.75c", frame=True)
-    fig.colorbar(frame='af+l"DSAR"')
-    fig.show()
-    output_directory = './output/plot/animation/{}'.format(parameter)
-    # Create the output directory if it doesn't exist
-    os.makedirs(output_directory, exist_ok=True)
-    fig.savefig(output_directory + {})
-    return 
-
-#------------------------------------------------------------------
-
-
+# Animations
 def MinMax4plotting(read_dictionary: dict = None):
     """
     Compute the minimum and maximum values for each row in a dictionary of DataFrames.
@@ -155,9 +130,13 @@ def MinMax4plotting(read_dictionary: dict = None):
     return min_df, max_df
 
 
-def map_plot(df: pd.DataFrame = None, color_min_max: list = None, colormap: str = None, 
-             parameter: str = None, key: str = None, region: list = None, projection: str = "M15c"):
-
+def map_plot(df: pd.DataFrame = None,
+             color_min_max: list = None,
+             colormap: str = None, 
+             parameter: str = None,
+             key: str = None,
+             region: list = None,
+             projection: str = "M15c"):
     # load base map and transfer to hillshade
     pygmt.makecpt(cmap="gray", series=[-1.5, 0.3, 0.01])
     fig = pygmt.Figure()
@@ -165,28 +144,22 @@ def map_plot(df: pd.DataFrame = None, color_min_max: list = None, colormap: str 
     dgrid = pygmt.grdgradient(grid=grid, radiance=[270, 30])
     fig.basemap(region=region, projection=projection, frame= [f"+t{key}"])
     fig.grdimage(grid=dgrid, projection=projection, cmap=True)
-    
-    pygmt.makecpt(cmap=colormap, series=color_min_max)
-    # fig.text(x=region[0]+0.02, y=region[3]-0.02, text=key, font="22p,Helvetica-Bold,White")
-    
-    # stations = stations_stack[key].columns
+    # Plot markers using latitude and longitudes
+    pygmt.makecpt(cmap=colormap, series=color_min_max)    
     means = df.loc['mean']
     longitudes = df.loc['longitude']
     latitudes = df.loc['latitude']
-    fig.plot(x=longitudes, y=latitudes, fill=means, cmap=True, style="i0.75c", frame=True)
-    
+    fig.plot(x=longitudes, y=latitudes, fill=means,
+              cmap=True, style="i0.75c", frame=True)
     fig.colorbar(frame='af+l"DSAR"')
-    # fig.show()
-    # output_directory = './output/plot/animation/{}'.format(parameter)
-    output_directory = '/Users/koepflma/Desktop/animation/{}/'.format(parameter)
+    output_directory = './output/plot/animation/{}'.format(parameter)
     # Create the output directory if it doesn't exist
     os.makedirs(output_directory, exist_ok=True)
     fig.savefig(output_directory + f'{parameter}_{key}.png')
     return
 
 
-def my_annimation(read_dictionary: dict = None, parameter: str = None, colormap: str = None):
-    
+def animation(read_dictionary: dict = None, parameter: str = None, colormap: str = None):
     min_df, max_df = MinMax4plotting(read_dictionary)
     df_min_max = pd.DataFrame(columns=['minimum','maximum'])
     df_min_max['minimum'] = min_df.min(axis=1)
@@ -206,7 +179,3 @@ def my_annimation(read_dictionary: dict = None, parameter: str = None, colormap:
         map_plot(value, color_min_max, colormap, parameter, key, region)
 
     return
-
-read_dictionary = np.load('../example/example_data/stat_map.npy',allow_pickle='TRUE').item()
-# print(read_dictionary)
-amination(stations_stack=read_dictionary)
