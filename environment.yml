@@ -142,7 +142,7 @@ dependencies:
   - pyflakes=3.0.1=py312h06a4308_0
   - pygments=2.17.2=pyhd8ed1ab_0
   - pygmt=0.10.0=pyhd8ed1ab_0
-  - pylint=3.0.2
+  - pylint=2.16.2=py312h06a4308_0
   - python=3.12.0=hab00c5b_0_cpython
   - python-dateutil=2.8.2=pyhd3eb1b0_0
   - python-tzdata=2023.3=pyhd3eb1b0_0
