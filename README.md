@@ -31,7 +31,9 @@ navigate in jupyter lab to the directory ```example```
 sudo apt-get install imagemagick
 ```
 #### Mac
+This will first install brew wand then install ```imagemagick```.
 ```python
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install imagemagick
 ```
 
