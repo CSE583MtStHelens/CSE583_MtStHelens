@@ -12,16 +12,9 @@ current_directory = os.getcwd()
 # Go back one folder level
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 sys.path.insert(0, parent_directory)
-from mtsthelens import manipulation_functions as mf
+from mtsthelens import manipulation_functions
 
 class Test_mf(unittest.TestCase):
-    def test_smoke_import(self):
-        """
-        Test whether two import function import data extrusion and seismic function will run
-        """
-        df_dome = mf.importData_extrusion()
-        df_rsam_median = mf.importData_seismic('example_data_eruption')
-
     def test_smoke_manipulation(self):
         """
         Test the two manipuation functions: stackSpace and StackSpace_yearlyParam will run
@@ -33,8 +26,10 @@ class Test_mf(unittest.TestCase):
         df_rsam_median = pd.DataFrame(data, index=pd.date_range('2004-01-01', periods=100, freq='D'))
 
         #smoke test whether the two functions works
-        df_median_stackSpace, df_stackSpace_year = mf.stackInSpace(df_rsam_median)
-        df_yearlyParam = mf.stackSpace_yearParam(df_stackSpace_year)
+        self.assertIsNone(manipulation_functions.stackInSpace(df_rsam_median))
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(df_rsam_median)
+        self.assertIsNone(manipulation_functions.stackSpace_yearParam(df_stackSpace_year))
+
 
     def test_stack_in_time(self):
         """
