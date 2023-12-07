@@ -25,6 +25,13 @@ jupyter lab
 ```
 navigate in jupyter lab to the directory ```example```
 
+### Create the animation
+```cd``` to de directory where you have saved the ```.png``` files
+```python
+conda activate pygmt2
+convert -delay 30 -loop 0 *.png myvideo.gif
+```
+
 
 ## Data structure
 This project is structured in the way that we have a folder ```mtsthelens``` where you can find the python scripts of all the functions written. The folder ```example``` contains some sampled data and a working tutorial to show how our functions work. In our case we do have .csv files of the preprocessed seismic data. Each file contains the data of one seismic station and one year. The column headers indicate different parameters extracted from seismic time series. The rows represent time windows of 10 minutes. The ```docs``` folder contains some information about the project.<br>
