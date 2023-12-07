@@ -103,17 +103,17 @@ def df2dict(df, group_by='year'):
     """
     Group a DataFrame by year, month, or day based on the DatetimeIndex.
 
-    Parameters:
-    - df (pd.DataFrame): The input DataFrame with a DatetimeIndex.
-    - group_by (str, optional): The time unit to group by. Accepted values are 'year', 'month', or 'day'. Defaults to 'year'.
+    Args:
+        df (pd.DataFrame): The input DataFrame with a DatetimeIndex.
+        group_by (str, optional): The time unit to group by. Accepted values are 'year', 'month', or 'day'. Defaults to 'year'.
 
     Returns:
-    dict: A dictionary where keys are years, months, or days, and values are corresponding DataFrames.
+        dict: A dictionary where keys are years, months, or days, and values are corresponding DataFrames.
 
     Raises:
-    - ValueError: If the 'group_by' parameter is not one of 'year', 'month', or 'day'.
-    - TypeError: If 'df' is not a pandas DataFrame.
-    - ValueError: If the index of 'df' is not a DatetimeIndex.
+        ValueError: If the 'group_by' parameter is not one of 'year', 'month', or 'day'.
+        TypeError: If 'df' is not a pandas DataFrame.
+        ValueError: If the index of 'df' is not a DatetimeIndex.
     """
     # Check if df is a DataFrame
     if not isinstance(df, pd.DataFrame):
