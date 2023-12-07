@@ -3,6 +3,7 @@ import numpy as np
 import pygmt
 import matplotlib.pyplot as plt
 from datetime import datetime
+import sys,os
 
 Mercator = "M15c"
 
@@ -71,35 +72,140 @@ def plot_space_stack(space_stack_attr: pd.DataFrame):
         space_stack_attr.plot
     return
 
+
+
+
 # Animations of Space Stacks with Time
-def amination(stations_stack: dict = None, projection: str = "M15c"):
-    # for key in stations_stack.keys()
-    max_longitude = stations_stack[2005].loc['longitude'].max()
-    min_longitude = stations_stack[2005].loc['longitude'].min()
-    max_latitude = stations_stack[2005].loc['latitude'].max()
-    min_latitude = stations_stack[2005].loc['latitude'].min()
-    region = [
-    round(min_longitude - .05, 2),
-    round(max_longitude + .05, 2),
-    round(min_latitude - .05, 2),
-    round(max_latitude + .05, 2),
-    ]
+def map_plot(df: pd.DataFrame = None, color_min_max: list = None, parameter: str = None, region: list = None, projection: str = "M15c"):
+
+    # load base map and transfer to hillshade
     pygmt.makecpt(cmap="gray", series=[-1.5, 0.3, 0.01])
     fig = pygmt.Figure()
     grid = pygmt.datasets.load_earth_relief(resolution='03s', region=region)
     dgrid = pygmt.grdgradient(grid=grid, radiance=[270, 30])
     fig.basemap(region=region, projection=projection, frame=True)
     fig.grdimage(grid=dgrid, projection=projection, cmap=True)
+    
     colormap = "inferno"
-    fig.colorbar(cmap=colormap)
+    pygmt.makecpt(cmap=colormap, series=color_min_max)
+    # pygmt.makecpt(cmap=colormap, series=[0, 5, 1])
+    fig.text(x=-122.33, y=46.39, text="2022", font="22p,Helvetica-Bold,White")
+    
     for key in stations_stack.keys():
         # stations = stations_stack[key].columns
         means = stations_stack[key].loc['mean']
         longitudes = stations_stack[key].loc['longitude']
         latitudes = stations_stack[key].loc['latitude']
-        fig.plot(x=longitudes, y=latitudes, fill=means, cmap=colormap, style="i0.75c", frame=True)
+        fig.plot(x=longitudes, y=latitudes, fill=means, cmap=True, style="i0.75c", frame=True)
+    fig.colorbar(frame='af+l"DSAR"')
     fig.show()
+    output_directory = './output/plot/animation/{}'.format(parameter)
+    # Create the output directory if it doesn't exist
+    os.makedirs(output_directory, exist_ok=True)
+    fig.savefig(output_directory + {})
     return 
+
+#------------------------------------------------------------------
+
+
+def MinMax4plotting(read_dictionary: dict = None):
+    """
+    Compute the minimum and maximum values for each row in a dictionary of DataFrames.
+
+    Args:
+        read_dictionary (dict): A dictionary where keys are DataFrame names and values are DataFrames.
+
+    Returns:
+        tuple: Two DataFrames, the first containing the minimum values per row, and the second containing the maximum values.
+
+    Raises:
+        ValueError: If the input dictionary is empty.
+        TypeError: If the input is not a dictionary or if the values in the dictionary are not DataFrames.
+    """
+    # Check if the input is a dictionary
+    if not isinstance(read_dictionary, dict):
+        raise TypeError("Input must be a dictionary.")
+
+    # Check if the dictionary is empty
+    if not read_dictionary:
+        raise ValueError("Input dictionary is empty.")
+
+    # Initialize lists to store min and max values for each row
+    min_values_per_row = []
+    max_values_per_row = []
+
+    # Loop through the DataFrames in the dictionary
+    for key, df in read_dictionary.items():
+        # Check if the values are DataFrames
+        if not isinstance(df, pd.DataFrame):
+            raise TypeError(f"Value associated with key '{key}' is not a DataFrame.")
+
+        # Get the min and max values for each row
+        min_values = df.min(axis=1)
+        max_values = df.max(axis=1)
+
+        # Append the min and max values to the lists
+        min_values_per_row.append(min_values)
+        max_values_per_row.append(max_values)
+
+    # Convert the lists to DataFrames
+    min_df = pd.DataFrame(min_values_per_row, index=read_dictionary.keys()).transpose()
+    max_df = pd.DataFrame(max_values_per_row, index=read_dictionary.keys()).transpose()
+
+    return min_df, max_df
+
+
+def map_plot(df: pd.DataFrame = None, color_min_max: list = None, colormap: str = None, 
+             parameter: str = None, key: str = None, region: list = None, projection: str = "M15c"):
+
+    # load base map and transfer to hillshade
+    pygmt.makecpt(cmap="gray", series=[-1.5, 0.3, 0.01])
+    fig = pygmt.Figure()
+    grid = pygmt.datasets.load_earth_relief(resolution='03s', region=region)
+    dgrid = pygmt.grdgradient(grid=grid, radiance=[270, 30])
+    fig.basemap(region=region, projection=projection, frame= [f"+t{key}"])
+    fig.grdimage(grid=dgrid, projection=projection, cmap=True)
+    
+    pygmt.makecpt(cmap=colormap, series=color_min_max)
+    # fig.text(x=region[0]+0.02, y=region[3]-0.02, text=key, font="22p,Helvetica-Bold,White")
+    
+    # stations = stations_stack[key].columns
+    means = df.loc['mean']
+    longitudes = df.loc['longitude']
+    latitudes = df.loc['latitude']
+    fig.plot(x=longitudes, y=latitudes, fill=means, cmap=True, style="i0.75c", frame=True)
+    
+    fig.colorbar(frame='af+l"DSAR"')
+    # fig.show()
+    # output_directory = './output/plot/animation/{}'.format(parameter)
+    output_directory = '/Users/koepflma/Desktop/animation/{}/'.format(parameter)
+    # Create the output directory if it doesn't exist
+    os.makedirs(output_directory, exist_ok=True)
+    fig.savefig(output_directory + f'{parameter}_{key}.png')
+    return
+
+
+def my_annimation(read_dictionary: dict = None, parameter: str = None, colormap: str = None):
+    
+    min_df, max_df = MinMax4plotting(read_dictionary)
+    df_min_max = pd.DataFrame(columns=['minimum','maximum'])
+    df_min_max['minimum'] = min_df.min(axis=1)
+    df_min_max['maximum'] = max_df.max(axis=1)
+
+    region = [
+    round(df_min_max['minimum'].loc['longitude'] - .05, 2),
+    round(df_min_max['maximum'].loc['longitude'] + .05, 2),
+    round(df_min_max['minimum'].loc['latitude'] - .05, 2),
+    round(df_min_max['maximum'].loc['latitude'] + .05, 2),
+    ]
+ 
+    color_min_max = [int(df_min_max['minimum'].loc[parameter]), int(df_min_max['maximum'].loc[parameter])]
+
+    for key, value in read_dictionary.items():
+
+        map_plot(value, color_min_max, colormap, parameter, key, region)
+
+    return
 
 read_dictionary = np.load('../example/example_data/stat_map.npy',allow_pickle='TRUE').item()
 # print(read_dictionary)
