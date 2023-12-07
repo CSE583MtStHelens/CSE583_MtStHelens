@@ -7,6 +7,7 @@ dependencies:
   - _openmp_mutex=4.5=2_gnu
   - astroid=2.14.2=py312h06a4308_0
   - asttokens=2.4.1=pyhd8ed1ab_0
+  - black=23.11.0
   - blas=1.0=openblas
   - blosc=1.21.5=h0f2a231_0
   - bzip2=1.0.8=h7b6447c_0
@@ -141,7 +142,7 @@ dependencies:
   - pyflakes=3.0.1=py312h06a4308_0
   - pygments=2.17.2=pyhd8ed1ab_0
   - pygmt=0.10.0=pyhd8ed1ab_0
-  - pylint=2.16.2=py312h06a4308_0
+  - pylint=3.0.2
   - python=3.12.0=hab00c5b_0_cpython
   - python-dateutil=2.8.2=pyhd3eb1b0_0
   - python-tzdata=2023.3=pyhd3eb1b0_0
@@ -194,5 +195,14 @@ dependencies:
       - matplotlib==3.8.2
       - pillow==10.1.0
       - pyparsing==3.1.1
+      - jupyter-client==8.6.0
+      - jupyter-core==5.5.0
+      - jupyter-events==0.9.0
+      - jupyter-lsp==2.2.1
+      - jupyter-server==2.11.1
+      - jupyter-server-terminals==0.4.4
+      - jupyterlab==4.0.9
+      - jupyterlab-pygments==0.3.0
+      - jupyterlab-server==2.25.2
       - zipp==3.17.0
 prefix: /home/yash6599/miniconda3/envs/pygmt2
