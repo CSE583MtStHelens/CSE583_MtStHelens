@@ -72,16 +72,21 @@ def stackInSpace(df_rsam_median):
     Output: Average Seasonality over all stations, stacked in time series with reasonality removed.\
              Contains a column of maximum and minimum difference per year. Output to .csv file\
     '''
+    # remove the 29th February
+    df_rsam_median = df_rsam_median.loc[~((df_rsam_median.index.month==2) & (df_rsam_median.index.day==29))]
+
     df_median_stackSpace = pd.DataFrame()
     df_rsam_median_f = df_rsam_median.fillna(0)
+
+    # stack in space
     df_median_stackSpace['df_rsam_median_SS'] = df_rsam_median_f.apply(lambda row: row[row != 0].mean(),axis = 1)
 
-    df_dict = df2dict(df_median_stackSpace['df_rsam_median_SS']) # brake df up into years and drop 29th feb
-    
+    df_dict = df2dict(df_median_stackSpace['df_rsam_median_SS']) # brake df up into years
+
     key_list = [key for key,value in df_dict.items()]
-    time_list = df_dict[2004].index.strftime('%m/%d %H:%M:%S').to_list()
-    
-    df_stackSpace_year = pd.DataFrame(index=time_list,columns=key_list)
+    time_list = df_dict[key_list[0]].index.strftime('%m/%d %H:%M:%S').to_list()
+    df_stackSpace_year = pd.DataFrame(index=time_list, columns=key_list)
+
     for key, value in df_dict.items():
         df_stackSpace_year[key] = value.to_list()
     return df_median_stackSpace, df_stackSpace_year
@@ -98,22 +103,88 @@ def stackSpace_yearParam(df_stackSpace_year):
         df_yearlyParam[col].loc['median'] = df_stackSpace_year[col].median()
     return df_yearlyParam
 
-def df2dict(df):
-    """
-    Input: df along y-axis times
-    Output: dict keys are years and values are 
-    """
-    years = np.unique(df.index.year) # extract all years from time series
 
-    df_dict = {} 
-    for year in years:
-        df_year = df.loc[str(year)] # splits df into samaller df for each year
-        df_split1 = df_year[df_year.index<datetime.datetime(year,2,28,23,59,59,999)] # inclued dates until 28.2
-        df_split2 = df_year[df_year.index>datetime.datetime(year,3,1)] # includes dates from 1.3
-        df_concat = pd.concat([df_split1, df_split2]) # concat so that 29.2 removed
-        df_dict[year] = df_concat # add all stations as df, and years as keys
+def df2dict1(df, group_by='year'):
+    """
+    Group a DataFrame by year, month, or day based on the DatetimeIndex.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame with a DatetimeIndex.
+        group_by (str, optional): The time unit to group by. Accepted values are 'year', 'month', or 'day'. Defaults to 'year'.
+
+    Returns:
+        dict: A dictionary where keys are years, months, or days, and values are corresponding DataFrames.
+
+    Raises:
+        ValueError: If the 'group_by' parameter is not one of 'year', 'month', or 'day'.
+        TypeError: If 'df' is not a pandas DataFrame.
+        ValueError: If the index of 'df' is not a DatetimeIndex.
+    """
+    # Check if df is a DataFrame
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("Input 'df' must be a pandas DataFrame.")
+
+    # Check if the index is a DatetimeIndex
+    if not isinstance(df.index, pd.DatetimeIndex):
+        raise ValueError("The index of 'df' must be a DatetimeIndex.")
+
+    if group_by == 'year':
+        periods = df.index.year
+    elif group_by == 'month':
+        periods = df.index.to_period('M')
+    elif group_by == 'day':
+        periods = df.index.to_period('D')
+    else:
+        raise ValueError("Invalid value for 'group_by'. Use 'year', 'month', or 'day'.")
+
+    df_dict = {}
+    unique_periods = np.unique(periods)
+
+    for period in unique_periods:
+        df_period = df[periods == period]
+        df_dict[period] = df_period
+
     return df_dict
 
+def df2dict(df, group_by='year'):
+    """
+    Group a DataFrame or time series by year, month, or day based on the DatetimeIndex.
 
+    Args:
+        df (pd.DataFrame or pd.Series): The input DataFrame or time series with a DatetimeIndex.
+        group_by (str, optional): The time unit to group by. Accepted values are 'year', 'month', or 'day'. Defaults to 'year'.
 
+    Returns:
+        dict: A dictionary where keys are years, months, or days, and values are corresponding DataFrames or time series.
+
+    Raises:
+        ValueError: If the 'group_by' parameter is not one of 'year', 'month', or 'day'.
+        TypeError: If 'df' is not a pandas DataFrame or Series.
+        ValueError: If the index of 'df' is not a DatetimeIndex.
+    """
+    # Check if df is a DataFrame or Series
+    if not isinstance(df, (pd.DataFrame, pd.Series)):
+        raise TypeError("Input 'df' must be a pandas DataFrame or Series.")
+
+    # Check if the index is a DatetimeIndex
+    if not isinstance(df.index, pd.DatetimeIndex):
+        raise ValueError("The index of 'df' must be a DatetimeIndex.")
+
+    if group_by == 'year':
+        periods = df.index.year
+    elif group_by == 'month':
+        periods =df.index.to_period('M')
+    elif group_by == 'day':
+        periods = df.index.to_period('D')
+    else:
+        raise ValueError("Invalid value for 'group_by'. Use 'year', 'month', or 'day'.")
+
+    df_dict = {}
+    unique_periods = np.unique(periods)
+
+    for period in unique_periods:
+        df_period = df[periods == period]
+        df_dict[period] = df_period
+
+    return df_dict
 

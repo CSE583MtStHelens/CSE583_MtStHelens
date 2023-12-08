@@ -160,6 +160,7 @@ def map_plot(df: pd.DataFrame = None,
     fig.plot(x=longitudes, y=latitudes, fill=means,
              cmap=True, style="i0.75c", frame=True)
     fig.colorbar(frame='af+l"DSAR"')
+    # Save figure
     output_directory = f'./output/plot/animation/{parameter}'
     # Create the output directory if it doesn't exist
     os.makedirs(output_directory, exist_ok=True)
