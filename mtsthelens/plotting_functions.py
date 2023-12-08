@@ -152,11 +152,12 @@ def map_plot(df: pd.DataFrame = None,
     fig.plot(x=longitudes, y=latitudes, fill=means,
               cmap=True, style="i0.75c", frame=True)
     fig.colorbar(frame='af+l"DSAR"')
-    output_directory = './output/plot/animation/{}'.format(parameter)
+    # Save figure
+    output_directory = './output/plot/animation/{}/'.format(parameter)
     # Create the output directory if it doesn't exist
     os.makedirs(output_directory, exist_ok=True)
     fig.savefig(output_directory + f'{parameter}_{key}.png')
-    return
+    return fig
 
 
 def animation(read_dictionary: dict = None, parameter: str = None, colormap: str = None):
@@ -176,6 +177,11 @@ def animation(read_dictionary: dict = None, parameter: str = None, colormap: str
 
     for key, value in read_dictionary.items():
 
-        map_plot(value, color_min_max, colormap, parameter, key, region)
+        fig = map_plot(value, color_min_max, colormap, parameter, key, region)
+        # # Save figure
+        # output_directory = './output/plot/animation/{}'.format(parameter)
+        # # Create the output directory if it doesn't exist
+        # os.makedirs(output_directory, exist_ok=True)
+        # fig.savefig(output_directory + f'{parameter}_{key}.png')
 
     return
