@@ -40,31 +40,22 @@ def filter_data(stack):
     return filt_stack
 
 def stackInTime(df):
-    """
-    Name: Stacking in Time
-    What it does: Analyses data over multiple years to find the average seasonality data,
+    '''
+    Name: Stacking in Time\
+    What it does: Analyses data over multiple years to find the average seasonality data,\
             and removes the seasonality trends from the data
-    Input: pandas dataframe of the reformatted time series data
-    Output: Average seasonality of each station, data from each station with seasonality removed
-    """
-    all_seasonal_data = pd.DataFrame()
-    all_data_seasonality_removed = pd.DataFrame()
+    Input: pandas dataframe of the reformatted time series data\
+    Output: Average seasonality of each station, data from each station with seasonality removed\
+    '''
+    grouped_data = df.groupby([df.index.month, df.index.day, df.index.hour, df.index.minute])
+    seasonal_data = grouped_data.mean()
+    seasonal_data.index = pd.to_datetime(seasonal_data.index.map(lambda x: f'2000-{x[0]:02d}-{x[1]:02d} {x[2]:02d}:{x[3]:02d}:00'))
 
-    for year in df.index.year.unique():
-        year_data = df[df.index.year == year]
+    data_no_seasonal = df.copy()
+    modified_index = pd.to_datetime(df.index.map(lambda x: f'2000-{x.month:02d}-{x.day:02d} {x.hour:02d}:{x.minute:02d}:00'))
+    data_no_seasonal = data_no_seasonal - seasonal_data.loc[modified_index].values
 
-        grouped_data = year_data.groupby([year_data.index.month, year_data.index.day, year_data.index.hour, year_data.index.minute])
-        seasonal_data = grouped_data.mean()
-        seasonal_data.index = pd.to_datetime(seasonal_data.index.map(lambda x: f'{year}-{x[0]:02d}-{x[1]:02d} {x[2]:02d}:{x[3]:02d}:00'))
-
-        modified_index = pd.to_datetime(year_data.index.map(lambda x: f'{year}-{x.month:02d}-{x.day:02d} {x.hour:02d}:{x.minute:02d}:00'))
-        data_seasonality_removed = year_data.copy()
-        data_seasonality_removed = data_seasonality_removed - seasonal_data.loc[modified_index].values
-
-        all_seasonal_data = pd.concat([all_seasonal_data, seasonal_data])
-        all_data_seasonality_removed = pd.concat([all_data_seasonality_removed, data_seasonality_removed])
-
-    return all_seasonal_data, all_data_seasonality_removed
+    return seasonal_data, data_no_seasonal
 
 """
     For each parameter, there are two types of files, the df_stack_space and the df_yearlyParam. 
@@ -111,6 +102,49 @@ def stackSpace_yearParam(df_stackSpace_year):
         df_yearlyParam[col].loc['mean'] = df_stackSpace_year[col].mean()
         df_yearlyParam[col].loc['median'] = df_stackSpace_year[col].median()
     return df_yearlyParam
+
+
+def df2dict1(df, group_by='year'):
+    """
+    Group a DataFrame by year, month, or day based on the DatetimeIndex.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame with a DatetimeIndex.
+        group_by (str, optional): The time unit to group by. Accepted values are 'year', 'month', or 'day'. Defaults to 'year'.
+
+    Returns:
+        dict: A dictionary where keys are years, months, or days, and values are corresponding DataFrames.
+
+    Raises:
+        ValueError: If the 'group_by' parameter is not one of 'year', 'month', or 'day'.
+        TypeError: If 'df' is not a pandas DataFrame.
+        ValueError: If the index of 'df' is not a DatetimeIndex.
+    """
+    # Check if df is a DataFrame
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("Input 'df' must be a pandas DataFrame.")
+
+    # Check if the index is a DatetimeIndex
+    if not isinstance(df.index, pd.DatetimeIndex):
+        raise ValueError("The index of 'df' must be a DatetimeIndex.")
+
+    if group_by == 'year':
+        periods = df.index.year
+    elif group_by == 'month':
+        periods = df.index.to_period('M')
+    elif group_by == 'day':
+        periods = df.index.to_period('D')
+    else:
+        raise ValueError("Invalid value for 'group_by'. Use 'year', 'month', or 'day'.")
+
+    df_dict = {}
+    unique_periods = np.unique(periods)
+
+    for period in unique_periods:
+        df_period = df[periods == period]
+        df_dict[period] = df_period
+
+    return df_dict
 
 def df2dict(df, group_by='year'):
     """
