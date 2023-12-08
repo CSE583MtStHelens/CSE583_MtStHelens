@@ -72,16 +72,21 @@ def stackInSpace(df_rsam_median):
     Output: Average Seasonality over all stations, stacked in time series with reasonality removed.\
              Contains a column of maximum and minimum difference per year. Output to .csv file\
     '''
+    # remove the 29th February
+    df_rsam_median = df_rsam_median.loc[~((df_rsam_median.index.month==2) & (df_rsam_median.index.day==29))]
+
     df_median_stackSpace = pd.DataFrame()
     df_rsam_median_f = df_rsam_median.fillna(0)
+
+    # stack in space
     df_median_stackSpace['df_rsam_median_SS'] = df_rsam_median_f.apply(lambda row: row[row != 0].mean(),axis = 1)
 
-    df_dict = df2dict(df_median_stackSpace['df_rsam_median_SS']) # brake df up into years and drop 29th feb
-    
+    df_dict = df2dict(df_median_stackSpace['df_rsam_median_SS']) # brake df up into years
+
     key_list = [key for key,value in df_dict.items()]
-    time_list = df_dict[2004].index.strftime('%m/%d %H:%M:%S').to_list()
-    
-    df_stackSpace_year = pd.DataFrame(index=time_list,columns=key_list)
+    time_list = df_dict[key_list[0]].index.strftime('%m/%d %H:%M:%S').to_list()
+    df_stackSpace_year = pd.DataFrame(index=time_list, columns=key_list)
+
     for key, value in df_dict.items():
         df_stackSpace_year[key] = value.to_list()
     return df_median_stackSpace, df_stackSpace_year
@@ -178,7 +183,7 @@ def df2dict(df, group_by='year'):
     unique_periods = np.unique(periods)
 
     for period in unique_periods:
-        df_period = df_or_series[periods == period]
+        df_period = df[periods == period]
         df_dict[period] = df_period
 
     return df_dict
