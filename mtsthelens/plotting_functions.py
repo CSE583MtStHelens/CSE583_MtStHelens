@@ -9,26 +9,6 @@ import matplotlib.pyplot as plt
 MERCATOR = "M15c"
 
 
-# Stations Map using PyGMT
-def plot_stations_map(
-        region,
-        station_locations=None,
-        projection=MERCATOR):
-    pygmt.makecpt(cmap="gray", series=[-1.5, 0.3, 0.01])
-    fig = pygmt.Figure()
-    grid = pygmt.datasets.load_earth_relief(resolution='03s', region=region)
-    dgrid = pygmt.grdgradient(grid=grid, radiance=[270, 30])
-    fig.basemap(region=region, projection=projection, frame=True)
-    fig.grdimage(grid=dgrid, projection="M15c", cmap=True)
-    for i in station_locations.index:
-        fig.plot(
-            x=station_locations.longitude[i], y=station_locations.latitude[i],
-            style="i0.75c", fill=station_locations.color[i],
-            pen="white", transparency=25
-            )
-    return fig
-
-
 # Raw Data vs Time Stack
 def plot_stack_vs_raw(stack: pd.DataFrame, raw_data: pd.DataFrame):
     n_stations = stack.shape[1]
