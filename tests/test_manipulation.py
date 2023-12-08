@@ -6,6 +6,7 @@ import sys,os
 import numpy as np
 import pandas as pd
 import pdb
+import pytest
 
 #file directory manipulation - relative import
 current_directory = os.getcwd()
@@ -15,9 +16,17 @@ sys.path.insert(0, parent_directory)
 from mtsthelens import manipulation_functions
 
 class Test_Manipulation(unittest.TestCase):
-    def test_smoke_manipulation(self):
+    def setUp(self):
+        # Create a sample DataFrame for testing
+        date_rng = pd.date_range(start='2022-01-01', end='2022-12-31', freq='D')
+        data = {'value': np.random.rand(len(date_rng))}
+        self.sample_df = pd.DataFrame(data, index=date_rng)
+
+    
+    def test_smoke_manipulation_A(self):
         """
         Test the two manipuation functions: stackSpace and StackSpace_yearlyParam will run
+        With three stations, and start from same year as example data file
         """
         # Create a sample DataFrame for testing
         data = {'Station1': np.random.rand(100),
@@ -26,10 +35,188 @@ class Test_Manipulation(unittest.TestCase):
         df_rsam_median = pd.DataFrame(data, index=pd.date_range('2004-01-01', periods=100, freq='D'))
 
         #smoke test whether the two functions works
-        self.assertIsNone(manipulation_functions.stackInSpace(df_rsam_median))
+        self.assertIsNotNone(manipulation_functions.stackInSpace(df_rsam_median))
         df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(df_rsam_median)
-        self.assertIsNone(manipulation_functions.stackSpace_yearParam(df_stackSpace_year))
+        self.assertIsNotNone(manipulation_functions.stackSpace_yearParam(df_stackSpace_year))
 
+    def test_smoke_manipulation_B(self):
+        """
+        Test the two manipuation functions: stackSpace and StackSpace_yearlyParam will run
+        With 5 stations, and start from different year as example data file
+        """
+        # Create a sample DataFrame for testing
+        data = {'Station1': np.random.rand(100),
+                'Station2': np.random.rand(100),
+                'Station3': np.random.rand(100),
+                'Station4': np.random.rand(100),
+                'Station5': np.random.rand(100),}
+        df_rsam_median = pd.DataFrame(data, index=pd.date_range('2007-01-01', periods=100, freq='D'))
+
+        #smoke test whether the two functions works
+        self.assertIsNotNone(manipulation_functions.stackInSpace(df_rsam_median))
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(df_rsam_median)
+        self.assertIsNotNone(manipulation_functions.stackSpace_yearParam(df_stackSpace_year))
+
+    def test_stackInSpace_A(self):
+        """
+        Test the stackInSpace function 
+        Created the synthetic data and test whether the funciton perform as we expected
+        Test if the stackInSpace function stacks data correctly across all stations
+        """
+        # Create a sample DataFrame for testing
+        data = {'Station1': np.random.rand(100),
+                'Station2': np.random.rand(100),
+                'Station3': np.random.rand(100)}
+        df_rsam_median = pd.DataFrame(data, index=pd.date_range('2004-01-01', periods=100, freq='D'))
+
+        # Apply the stackInSpace function
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(df_rsam_median)
+
+        # Check if the shape of the stacked DataFrame is correct
+        expected_shape = (99, 1)  # Stacking across all stations should result in one column
+        self.assertEqual(df_median_stackSpace.shape, expected_shape)
+
+    def test_stackInSpace_B(self):
+        """
+        Test the stackInSpace function 
+        Created the synthetic data and test whether the funciton perform as we expected
+        Test if the stackInSpace function stacks data correctly across all stations
+        """
+        # Create a sample DataFrame for testing
+        data = {'Station1': np.random.rand(50),
+                'Station2': np.random.rand(50),
+                'Station3': np.random.rand(50),
+                'Station4': np.random.rand(50),
+                'Station5': np.random.rand(50),
+                'Station6': np.random.rand(50),
+                }
+        df_rsam_median = pd.DataFrame(data, index=pd.date_range('2009-01-01', periods=50, freq='D'))
+
+        # Apply the stackInSpace function
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(df_rsam_median)
+
+        # Check if the shape of the stacked DataFrame is correct
+        expected_shape = (50, 1)  # Stacking across all stations should result in one column
+        self.assertEqual(df_median_stackSpace.shape, expected_shape)
+
+    # Check if the years in the stacked DataFrame match the input DataFrame
+        self.assertListEqual(df_stackSpace_year.columns.to_list(), [df_rsam_median.index.year.tolist()[0]])
+
+    def test_stackInSpace_C(self):
+                # Create a sample DataFrame for testing
+        data = {'Station1': np.random.rand(50),
+                'Station2': np.random.rand(50),
+                'Station3': np.random.rand(50),
+                'Station4': np.random.rand(50),
+                'Station5': np.random.rand(50),
+                'Station6': np.random.rand(50),
+                }
+        df_rsam_median = pd.DataFrame(data, index=pd.date_range('2009-01-01', periods=50, freq='D'))
+
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(df_rsam_median)
+        # Test that the output DataFrames are not empty
+        assert not df_median_stackSpace.empty
+        assert not df_stackSpace_year.empty
+
+    def test_stack_space_yearparam_A(self):
+        """
+        Test the stack_space_yearparam function 
+        Created the synthetic data and test whether the funciton perform as we expected
+        """
+        # Create a sample DataFrame for testing
+        data = {
+            'Station1': [10, 20, 30, 40],
+            'Station2': [15, 25, 35, 45],
+            'Station3': [5, 15, 25, 35],
+            'Station4': [30, 40, 50, 60],
+            'Station5': [30, 45, 20, 30]
+        }
+        df_stackSpace_year = pd.DataFrame(data, index=['01/01 00:00:00', '01/01 01:00:00', '01/01 02:00:00', '01/01 03:00:00'])
+
+        # Test if the function returns a DataFrame with the correct shape
+        df_result = manipulation_functions.stackSpace_yearParam(df_stackSpace_year)
+
+        self.assertIsInstance(df_result, pd.DataFrame)
+        self.assertEqual(df_result.shape, (4, 5))  # Adjust the shape based on your expectations
+
+        # Test if the calculated statistics are correct for each column
+        expected_max = {'Station1': 40, 'Station2': 45, 'Station3': 35, 'Station4': 60, 'Station5': 45}
+        expected_min = {'Station1': 10, 'Station2': 15, 'Station3': 5, 'Station4': 30, 'Station5': 20}
+        expected_mean = {'Station1': 25, 'Station2': 30, 'Station3': 20, 'Station4': 45, 'Station5': 31.25}
+        expected_median = {'Station1': 25, 'Station2': 30, 'Station3': 20, 'Station4': 45, 'Station5': 30}
+
+        for col in df_stackSpace_year.columns:
+            self.assertAlmostEqual(df_result[col].loc['max'], expected_max[col])
+            self.assertAlmostEqual(df_result[col].loc['min'], expected_min[col])
+            self.assertAlmostEqual(df_result[col].loc['mean'], expected_mean[col], places=3)
+            self.assertAlmostEqual(df_result[col].loc['median'], expected_median[col])
+
+    def test_stack_space_yearparam_B(self):
+        """
+        Test the stack_space_yearparam function 
+        Created the synthetic data and test whether the funciton perform as we expected
+        """
+        # Create a sample DataFrame for testing
+        data = {
+            'Station1': [10, 20, 30, 40],
+            'Station2': [15, 25, 35, 45],
+            'Station3': [5, 15, 25, 35]
+        }
+        df_stackSpace_year = pd.DataFrame(data, index=['01/01 00:00:00', '01/01 01:00:00', '01/01 02:00:00', '01/01 03:00:00'])
+
+        # Test if the function returns a DataFrame with the correct shape
+        df_result = manipulation_functions.stackSpace_yearParam(df_stackSpace_year)
+
+        self.assertIsInstance(df_result, pd.DataFrame)
+        self.assertEqual(df_result.shape, (4, 3))  # Adjust the shape based on your expectations
+
+        # Test if the calculated statistics are correct for each column
+        expected_max = {'Station1': 40, 'Station2': 45, 'Station3': 35}
+        expected_min = {'Station1': 10, 'Station2': 15, 'Station3': 5}
+        expected_mean = {'Station1': 25, 'Station2': 30, 'Station3': 20}
+        expected_median = {'Station1': 25, 'Station2': 30, 'Station3': 20}
+
+        for col in df_stackSpace_year.columns:
+            self.assertAlmostEqual(df_result[col].loc['max'], expected_max[col])
+            self.assertAlmostEqual(df_result[col].loc['min'], expected_min[col])
+            self.assertAlmostEqual(df_result[col].loc['mean'], expected_mean[col], places=3)
+            self.assertAlmostEqual(df_result[col].loc['median'], expected_median[col])
+    
+    def test_yearlyParam_C(self):
+                # Create a sample DataFrame for testing
+        data = {
+            'Station1': [10, 20, 30, 40],
+            'Station2': [15, 25, 35, 45],
+            'Station3': [5, 15, 25, 35]
+        }
+        df_stackSpace_year = pd.DataFrame(data, index=['01/01 00:00:00', '01/01 01:00:00', '01/01 02:00:00', '01/01 03:00:00'])
+
+        df_result = manipulation_functions.stackSpace_yearParam(df_stackSpace_year)
+        # Test that the output DataFrames are not empty
+        assert not df_result.empty
+
+    def test_df2dict_returns_dict(self):
+        result = manipulation_functions.df2dict(self.sample_df)
+        self.assertIsInstance(result, dict)
+
+    def test_df2dict_returns_expected_keys(self):
+        result = manipulation_functions.df2dict(self.sample_df)
+        expected_keys = self.sample_df.index.year.unique().tolist()
+        self.assertListEqual(list(result.keys()), expected_keys)
+
+    def test_df2dict_invalid_group_by_raises_error(self):
+        with self.assertRaises(ValueError):
+            manipulation_functions.df2dict(self.sample_df, group_by='invalid_group')
+
+    def test_df2dict_non_datetime_index_raises_error(self):
+        non_datetime_index_df = pd.DataFrame({'value': [1, 2, 3]}, index=[1, 2, 3])
+        with self.assertRaises(ValueError):
+            manipulation_functions.df2dict(non_datetime_index_df)
+
+    def test_stackInSpace_handles_leap_years(self):
+        leap_year_df = pd.DataFrame({'value': [1, 2, 3]}, index=pd.to_datetime(['2020-02-28', '2020-02-29', '2020-03-01']))
+        result_df, _ = manipulation_functions.stackInSpace(leap_year_df)
+        self.assertEqual(len(result_df), 2)
 
     def test_stack_in_time(self):
         """
@@ -61,59 +248,3 @@ class Test_Manipulation(unittest.TestCase):
 
         # Check if the input DataFrame is not modified
         self.assertTrue(df.equals(df_copy))
-
-    def test_stackInSpace(self):
-        """
-        Test the stackInSpace function 
-        Created the synthetic data and test whether the funciton perform as we expected
-        Test if the stackInSpace function stacks data correctly across all stations
-        """
-        # Create a sample DataFrame for testing
-        data = {'Station1': np.random.rand(100),
-                'Station2': np.random.rand(100),
-                'Station3': np.random.rand(100)}
-        df_rsam_median = pd.DataFrame(data, index=pd.date_range('2004-01-01', periods=100, freq='D'))
-
-        # Apply the stackInSpace function
-        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(df_rsam_median)
-
-        # Check if the shape of the stacked DataFrame is correct
-        expected_shape = (100, 1)  # Stacking across all stations should result in one column
-        self.assertEqual(df_median_stackSpace.shape, expected_shape)
-
-    # Check if the years in the stacked DataFrame match the input DataFrame
-        self.assertListEqual(df_stackSpace_year.columns.to_list(), [df_rsam_median.index.year.tolist()[0]])
-
-    def test_stack_space_yearparam(self):
-        """
-        Test the stack_space_yearparam function 
-        Created the synthetic data and test whether the funciton perform as we expected
-        """
-        # Create a sample DataFrame for testing
-        data = {
-            'Station1': [10, 20, 30, 40],
-            'Station2': [15, 25, 35, 45],
-            'Station3': [5, 15, 25, 35]
-        }
-        df_stackSpace_year = pd.DataFrame(data, index=['01/01 00:00:00', '01/01 01:00:00', '01/01 02:00:00', '01/01 03:00:00'])
-
-        # Test if the function returns a DataFrame with the correct shape
-        df_result = manipulation_functions.stackSpace_yearParam(df_stackSpace_year)
-
-        self.assertIsInstance(df_result, pd.DataFrame)
-        self.assertEqual(df_result.shape, (4, 3))  # Adjust the shape based on your expectations
-
-        # Test if the calculated statistics are correct for each column
-        expected_max = {'Station1': 40, 'Station2': 45, 'Station3': 35}
-        expected_min = {'Station1': 10, 'Station2': 15, 'Station3': 5}
-        expected_mean = {'Station1': 25, 'Station2': 30, 'Station3': 20}
-        expected_median = {'Station1': 25, 'Station2': 30, 'Station3': 20}
-
-        for col in df_stackSpace_year.columns:
-            self.assertAlmostEqual(df_result[col].loc['max'], expected_max[col])
-            self.assertAlmostEqual(df_result[col].loc['min'], expected_min[col])
-            self.assertAlmostEqual(df_result[col].loc['mean'], expected_mean[col], places=3)
-            self.assertAlmostEqual(df_result[col].loc['median'], expected_median[col])
-
-
-
