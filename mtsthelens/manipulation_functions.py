@@ -40,22 +40,31 @@ def filter_data(stack):
     return filt_stack
 
 def stackInTime(df):
-    '''
-    Name: Stacking in Time\
-    What it does: Analyses data over multiple years to find the average seasonality data,\
+    """
+    Name: Stacking in Time
+    What it does: Analyses data over multiple years to find the average seasonality data,
             and removes the seasonality trends from the data
-    Input: pandas dataframe of the reformatted time series data\
-    Output: Average seasonality of each station, data from each station with seasonality removed\
-    '''
-    grouped_data = df.groupby([df.index.month, df.index.day, df.index.hour, df.index.minute])
-    seasonal_data = grouped_data.mean()
-    seasonal_data.index = pd.to_datetime(seasonal_data.index.map(lambda x: f'2000-{x[0]:02d}-{x[1]:02d} {x[2]:02d}:{x[3]:02d}:00'))
+    Input: pandas dataframe of the reformatted time series data
+    Output: Average seasonality of each station, data from each station with seasonality removed
+    """
+    all_seasonal_data = pd.DataFrame()
+    all_data_seasonality_removed = pd.DataFrame()
 
-    data_no_seasonal = df.copy()
-    modified_index = pd.to_datetime(df.index.map(lambda x: f'2000-{x.month:02d}-{x.day:02d} {x.hour:02d}:{x.minute:02d}:00'))
-    data_no_seasonal = data_no_seasonal - seasonal_data.loc[modified_index].values
+    for year in df.index.year.unique():
+        year_data = df[df.index.year == year]
 
-    return seasonal_data, data_no_seasonal
+        grouped_data = year_data.groupby([year_data.index.month, year_data.index.day, year_data.index.hour, year_data.index.minute])
+        seasonal_data = grouped_data.mean()
+        seasonal_data.index = pd.to_datetime(seasonal_data.index.map(lambda x: f'{year}-{x[0]:02d}-{x[1]:02d} {x[2]:02d}:{x[3]:02d}:00'))
+
+        modified_index = pd.to_datetime(year_data.index.map(lambda x: f'{year}-{x.month:02d}-{x.day:02d} {x.hour:02d}:{x.minute:02d}:00'))
+        data_seasonality_removed = year_data.copy()
+        data_seasonality_removed = data_seasonality_removed - seasonal_data.loc[modified_index].values
+
+        all_seasonal_data = pd.concat([all_seasonal_data, seasonal_data])
+        all_data_seasonality_removed = pd.concat([all_data_seasonality_removed, data_seasonality_removed])
+
+    return all_seasonal_data, all_data_seasonality_removed
 
 """
     For each parameter, there are two types of files, the df_stack_space and the df_yearlyParam. 
