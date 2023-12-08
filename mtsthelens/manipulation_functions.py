@@ -99,7 +99,7 @@ def stackSpace_yearParam(df_stackSpace_year):
     return df_yearlyParam
 
 
-def df2dict(df, group_by='year'):
+def df2dict1(df, group_by='year'):
     """
     Group a DataFrame by year, month, or day based on the DatetimeIndex.
 
@@ -140,3 +140,46 @@ def df2dict(df, group_by='year'):
         df_dict[period] = df_period
 
     return df_dict
+
+def df2dict(df, group_by='year'):
+    """
+    Group a DataFrame or time series by year, month, or day based on the DatetimeIndex.
+
+    Args:
+        df (pd.DataFrame or pd.Series): The input DataFrame or time series with a DatetimeIndex.
+        group_by (str, optional): The time unit to group by. Accepted values are 'year', 'month', or 'day'. Defaults to 'year'.
+
+    Returns:
+        dict: A dictionary where keys are years, months, or days, and values are corresponding DataFrames or time series.
+
+    Raises:
+        ValueError: If the 'group_by' parameter is not one of 'year', 'month', or 'day'.
+        TypeError: If 'df' is not a pandas DataFrame or Series.
+        ValueError: If the index of 'df' is not a DatetimeIndex.
+    """
+    # Check if df is a DataFrame or Series
+    if not isinstance(df, (pd.DataFrame, pd.Series)):
+        raise TypeError("Input 'df' must be a pandas DataFrame or Series.")
+
+    # Check if the index is a DatetimeIndex
+    if not isinstance(df.index, pd.DatetimeIndex):
+        raise ValueError("The index of 'df' must be a DatetimeIndex.")
+
+    if group_by == 'year':
+        periods = df.index.year
+    elif group_by == 'month':
+        periods =df.index.to_period('M')
+    elif group_by == 'day':
+        periods = df.index.to_period('D')
+    else:
+        raise ValueError("Invalid value for 'group_by'. Use 'year', 'month', or 'day'.")
+
+    df_dict = {}
+    unique_periods = np.unique(periods)
+
+    for period in unique_periods:
+        df_period = df_or_series[periods == period]
+        df_dict[period] = df_period
+
+    return df_dict
+
