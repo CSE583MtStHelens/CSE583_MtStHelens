@@ -22,7 +22,6 @@ class Test_Manipulation(unittest.TestCase):
         data = {'value': np.random.rand(len(date_rng))}
         self.sample_df = pd.DataFrame(data, index=date_rng)
 
-    
     def test_smoke_manipulation_A(self):
         """
         Test the two manipuation functions: stackSpace and StackSpace_yearlyParam will run
