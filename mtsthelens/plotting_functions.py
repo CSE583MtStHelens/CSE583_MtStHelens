@@ -12,27 +12,32 @@ MERCATOR = "M15c"
 # Raw Data vs Time Stack
 def plot_stack_vs_raw(stack: pd.DataFrame, raw_data: pd.DataFrame):
     n_stations = stack.shape[1]
-    fig, axes = plt.subplots(nrows=n_stations, ncols=1)
+    fig, axes = plt.subplots(nrows=n_stations, ncols=1, figsize=(10, 6*n_stations))
     for i, col in enumerate(stack.columns):
         stack[col].plot(ax=axes[i])
-        raw_data[col].plot(ax=axes[i])
-    return fig
+        raw_data[col].plot(ax=axes[i], alpha=0.4)
+        axes[i].set_title(f'Station {col}')
+        axes[i].legend(['Manipulated Data', 'Raw Data'])
+    return
 
 
-def plot_space_stack(yearly_params: pd.DataFrame):
+def plot_space_params(yearly_params: pd.DataFrame):
     fig = plt.figure()
-    plt.plot(yearly_params.columns, yearly_params.loc['mean'], marker='.')
-    plt.plot(yearly_params.columns, yearly_params.loc['min'], marker='*')
-    plt.plot(yearly_params.columns, yearly_params.loc['max'], marker='x')
-    plt.plot(yearly_params.columns, yearly_params.loc['median'], marker='o')
-    return fig
+    x_values = yearly_params.columns.astype(int)
+    plt.plot(x_values, yearly_params.loc['mean'], marker='.')
+    plt.plot(x_values, yearly_params.loc['min'], marker='*')
+    plt.plot(x_values, yearly_params.loc['max'], marker='x')
+    plt.plot(x_values, yearly_params.loc['median'], marker='o')
+    plt.legend(['mean', 'min', 'max', 'median'])
+    plt.title('Data Parameters')
+    return
 
 
 # Extrusion Rate
 def plot_extrusion(extrusion_data: pd.DataFrame,
                    raw_data: pd.DataFrame,
-                   time_stack: pd.DataFrame = None,
-                   filtered_stack: pd.DataFrame = None):
+                   time_stack: pd.DataFrame,
+                   filtered_stack: pd.DataFrame):
     """
     Plots and compares extrusion rate with the raw DSAR,
     time stacked DSAR and Filtered DSAR.
@@ -48,25 +53,34 @@ def plot_extrusion(extrusion_data: pd.DataFrame,
         filtered_stack:
 
     Returns:
-        Image that compares extrusion rate with DSAR values for raw data,
+        Image that compares extrusion rate with values for raw data,
         time stacked data and filtered data
     """
     min_date = extrusion_data.index.min()
     max_date = extrusion_data.index.max()
-    n_stations = raw_data.shape[1]-1
+    n_stations = raw_data.shape[1]
     raw_data = raw_data.loc[min_date:max_date]
     time_stack = time_stack.loc[min_date:max_date]
     filtered_stack = filtered_stack.loc[min_date:max_date]
     vol_change_rate = extrusion_data.columns[1]
     lava_ext_rate = extrusion_data.columns[3]
-    fig, axes = plt.subplots(nrows=n_stations, ncols=1)
+    fig, axes = plt.subplots(nrows=n_stations, ncols=1, figsize=(12, 6*n_stations))
     for i, col in enumerate(raw_data.columns):
-        raw_data[col].plot(ax=axes[i])
-        time_stack[col].plot(ax=axes[i])
-        filtered_stack[col].plot(ax=axes[i])
-        extrusion_data[vol_change_rate].plot(ax=axes[i])
-        extrusion_data[lava_ext_rate].plot(ax=axes[i])
-    return fig
+        ax1 = axes[i]
+        ax1.set_ylabel('Values') # Specify the value name
+        raw_data[col].plot(ax=ax1, alpha=0.4, label='Raw Data')
+        time_stack[col].plot(ax=ax1, alpha=0.6, label='Time Stack Data')
+        filtered_stack[col].plot(ax=ax1, label='Filtered Data')
+        ax2 = ax1.twinx()
+        ax2.set_ylabel('Rate ($m^3/s$)')
+        extrusion_data[vol_change_rate].plot(ax=ax2, color='black')
+        extrusion_data[lava_ext_rate].plot(ax=ax2, color='red')
+        axes[i].set_title(f'Station {col}')
+        
+        lines, labels = ax1.get_legend_handles_labels()
+        lines2, labels2 = ax2.get_legend_handles_labels()
+        ax2.legend(lines + lines2, labels + labels2, loc='upper right')
+    return
 
 
 # Animations
