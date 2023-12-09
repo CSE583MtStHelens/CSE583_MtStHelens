@@ -78,6 +78,12 @@ def norm(s):
     This function takes a numeric array 's' and normalizes it by scaling the values within the range [0, 1]. It calculates the range of the input array by finding the difference between the maximum and minimum values. Then, it scales all values in 's' proportionally to this range, resulting in a new array 's_norm' with values between 0 (minimum) and 1 (maximum).
     """
 
+    if not isinstance(s, (np.ndarray, pd.Series)):
+        raise TypeError("Input must be a np.array or pd.Series.")
+    
+    if s.shape[0] == 0:
+        raise ValueError("Empty np.array or pd.Series is not a valid input.")
+
     diff_s = max(s)-min(s)
     s_norm = ((s - min(s))/diff_s)
     return s_norm
