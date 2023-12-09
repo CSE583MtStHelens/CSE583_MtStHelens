@@ -15,15 +15,20 @@ def calculate_distance(lat1, lat2, lon1, lon2):
     Calculate the distance between two points on the Earth's surface using the Haversine formula.
 
     Args:
-        lat1 (float): Latitude of the first point in degrees.
-        lat2 (float): Latitude of the second point in degrees.
-        lon1 (float): Longitude of the first point in degrees.
-        lon2 (float): Longitude of the second point in degrees.
+        lat1 (float or int): Latitude of the first point in degrees.
+        lat2 (float or int): Latitude of the second point in degrees.
+        lon1 (float or int): Longitude of the first point in degrees.
+        lon2 (float or int): Longitude of the second point in degrees.
 
     Returns:
         float: The distance between the two points in kilometers.
+        
+    Raises:
+        TypeError if one or more of the Args is neiter an int nor a float,
     """
-     
+    if not all(isinstance(i, (int,float)) for i in [lat1, lat2, lon1, lon2]):
+        raise TypeError("Input values must be an integer or float.")
+
     # The math module contains a function named
     # radians which converts from degrees to radians.
     lon1 = math.radians(lon1)
