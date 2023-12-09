@@ -44,6 +44,24 @@ class TestPreprocessingFunctions(unittest.TestCase):
         s = pd.Series([-10, -5, 0])
         result = preprocessing_functions.norm(s)
         np.testing.assert_array_almost_equal(result, pd.Series([0, 0.5, 1]), decimal=6)
+
+    def test_norm_D(self):
+        """Test for empty np.array input for norm-function."""
+        s = np.array([])
+        with self.assertRaises(ValueError):
+            preprocessing_functions.norm(s)
+
+    def test_norm_E(self):
+        """Test for empty np.array input for norm-function."""
+        s = pd.Series([])
+        with self.assertRaises(ValueError):
+            preprocessing_functions.norm(s)
+
+    def test_norm_F(self):
+        """Test for neither np.array nor pd.Series but df as input for norm-function."""
+        s = pd.DataFrame(0, index=range(5), columns=['col1', 'col2'])
+        with self.assertRaises(TypeError):
+            preprocessing_functions.norm(s)
     
     # def test_read_data(path_file, cols=None):
     
