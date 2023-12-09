@@ -12,7 +12,7 @@ opts = dict(
     url = 'https://github.com/CSE583MtStHelens/CSE583_MtStHelens',
     license = 'MIT',
     author = 'guiliangz,shreeyag, yash6599, callumk, koepflma',
-    author_email = 'yash6599@uw.edu, shreeyag@uw.edu, guiliang@uw.edu, callumk@uw.edu, koepflma@uw.edu',
+    author_email = 'guiliang@uw.edu, shreeyag@uw.edu, yash6599@uw.edu, callumk@uw.edu, koepflma@uw.edu',
     description = 'Analyze the seismic data of the volcanic eruption of the Mount St. Helens from 2004 to 2008',
     long_description = 'Analyze the correlation of seismic attenuation and the magma extrusion rate and the changing\
           of the climatic patterns in the region from seismic data of the Mount St. Helens',
