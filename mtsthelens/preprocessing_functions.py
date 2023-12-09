@@ -22,9 +22,9 @@ def calculate_distance(lat1, lat2, lon1, lon2):
 
     Returns:
         float: The distance between the two points in kilometers.
-        
+
     Raises:
-        TypeError if one or more of the Args is neiter an int nor a float,
+        TypeError: If one or more of the Args is neiter an int nor a float.
     """
     if not all(isinstance(i, (int,float)) for i in [lat1, lat2, lon1, lon2]):
         raise TypeError("Input values must be an integer or float.")
@@ -49,25 +49,37 @@ def calculate_distance(lat1, lat2, lon1, lon2):
     # calculate the result
     return(c * r)
 
-def mask_df(row):
+def mask_df(row: pd.Series = None):
     """
     Masks specific regions in a time series based on detected peaks.
+
+    This function identifies peaks in the input time series 'row' and masks a region 
+    around each peak by setting values to NaN. The size of the masked region is defined 
+    by subtracting 500 samples from the left base and adding 500 samples to the right
+    base of the detected peak. If no peaks are detected, the function leaves the input time series unaltered.
 
     Args:
         row(pd.Series): A Pandas Series representing the time series data.
 
     Returns:
         row_masked(pd.Series): A Pandas Series with certain regions masked as NaN around detected peaks.
-    
-    This function identifies peaks in the input time series 'row' and masks a region around each peak by setting values to NaN. The size of the masked region is defined by subtracting 500 samples from the left base and adding 500 samples to the right base of the detected peak. If no peaks are detected, the function leaves the input time series unaltered.
+
+    Raises:
+        TypeError: If input is not a pd.Series.
     """
+
+    if not isinstance(row, pd.Series):
+        raise TypeError("Input must be a pd.Series.")
+    
     peaks, properties = scipy.signal.find_peaks(row, prominence=(row.rolling('10D').median()*100).to_numpy(), distance=len(row))
     row_masked = row.copy()
     try:
 #         row_masked[row_masked>min(row_masked.iloc[properties['left_bases'][0]:properties['right_bases'][0]])]=np.nan
         row_masked.iloc[properties['left_bases'][0]-500:properties['right_bases'][0]+500]=np.nan
     except:
+        print(f'{row} could not be masked.')
         pass
+
     return row_masked
 
 def norm(s):
@@ -79,6 +91,10 @@ def norm(s):
 
     Returns:
         s_norm(np.array or pd.Series): A normalized version of the input array, with values between 0 and 1.
+
+    Raises:
+        TypeError: If the input is neigter an np.ndarray nor a pd.Series.
+        ValueError: If the input is empty.
     
     This function takes a numeric array 's' and normalizes it by scaling the values within the range [0, 1]. It calculates the range of the input array by finding the difference between the maximum and minimum values. Then, it scales all values in 's' proportionally to this range, resulting in a new array 's_norm' with values between 0 (minimum) and 1 (maximum).
     """
@@ -93,7 +109,7 @@ def norm(s):
     s_norm = ((s - min(s))/diff_s)
     return s_norm
 
-def read_data(path_file, cols=None):
+def read_data(path_file: str = None, cols=None):
     """
     Reads data from a CSV file, converts it into a Pandas DataFrame, 
     and optionally selects specific column(s) from the DataFrame based on the 'cols' parameter.
