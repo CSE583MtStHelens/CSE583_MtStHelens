@@ -16,11 +16,59 @@ from mtsthelens import preprocessing_functions
 
 # Define a class in which the tests will run
 class TestPreprocessingFunctions(unittest.TestCase):
+    def test_calculate_distance_A(self):
+        """Smoke Test and at the same time also a one-shot test 
+        for only positive float values for calculate_distance-function."""
+        lat1 = 0
+        lat2 = 180
+        lon1 = 0
+        lon2 = 180
 
+        result = preprocessing_functions.calculate_distance(lat1, lat2, lon1, lon2)
 
-    # def test_calculate_distance(lat1, lat2, lon1, lon2):
-        
-    #     return False
+        self.assertAlmostEqual(result, 0.0, places=6) 
+
+    def test_calculate_distance_B(self):
+        """One-shot test for only positive and negative integer and float 
+        values for calculate_distance-function."""
+        lat1 = 0.0
+        lat2 = -180.0
+        lon1 = 0
+        lon2 = 180
+
+        result = preprocessing_functions.calculate_distance(lat1, lat2, lon1, lon2)
+
+        self.assertAlmostEqual(result, 0.0, places=6) 
+
+    def test_calculate_distance_C(self):
+        """Test if input is a string. """
+        lat1 = 0
+        lat2 = 0
+        lon1 = 0
+        lon2 = 'zero'
+
+        with self.assertRaises(TypeError):
+            preprocessing_functions.calculate_distance(lat1, lat2, lon1, lon2)
+
+    def test_calculate_distance_D(self):
+        """Test if input is a list. """
+        lat1 = 0
+        lat2 = 0
+        lon1 = 0
+        lon2 = [0,180]
+
+        with self.assertRaises(TypeError):
+            preprocessing_functions.calculate_distance(lat1, lat2, lon1, lon2)
+    
+    def test_calculate_distance_E(self):
+        """Test if input is a pd.Series. """
+        lat1 = 0
+        lat2 = 0
+        lon1 = 0
+        lon2 = pd.Series([0,180])
+
+        with self.assertRaises(TypeError):
+            preprocessing_functions.calculate_distance(lat1, lat2, lon1, lon2)
     
     # def test_mask_df(row):
         
