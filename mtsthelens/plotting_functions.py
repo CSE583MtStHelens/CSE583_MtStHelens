@@ -69,7 +69,7 @@ def plot_extrusion(extrusion_data: pd.DataFrame,
         ax1 = axes[i]
         ax1.set_ylabel('Values') # Specify the value name
         raw_data[col].plot(ax=ax1, alpha=0.4, label='Raw Data')
-        time_stack[col].plot(ax=ax1, alpha=0.6, label='Time Stack Data')
+        time_stack[col].plot(ax=ax1, alpha=0.6, label='Seasonality Removed Stack Data')
         filtered_stack[col].plot(ax=ax1, label='Filtered Data')
         ax2 = ax1.twinx()
         ax2.set_ylabel('Rate ($m^3/s$)')
