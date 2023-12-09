@@ -1,21 +1,25 @@
+"""This python file contains the tests for the preprocessing functions."""
 import unittest
 import numpy as np
 import pandas as pd
+import datetime
 import sys, os
 
-#file directory preprocessing - relative import
+# File directory preprocessing - relative import
 current_directory = os.getcwd()
 # Go back one folder level
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 sys.path.insert(0, parent_directory)
 from mtsthelens import preprocessing_functions
 
-#This script includes 8 test to test the knn_regression function.
-# To run the test navigate into the directory hw3-koepflma
-# You can eighter type 'python -m unittest discover' or specify the folder with 'python -m unittest discover -s tests'
+# This script includes test to test the preprocessing functions.
+# To run the test navigate into the directory
+# You can eighter type 'python -m unittest discover' or 
+# specify the folder with 'python -m unittest discover -s tests'
 
 # Define a class in which the tests will run
 class TestPreprocessingFunctions(unittest.TestCase):
+    # Tests for calculate_distance
     def test_calculate_distance_A(self):
         """Smoke Test and at the same time also a one-shot test 
         for only positive float values for calculate_distance-function."""
@@ -70,10 +74,64 @@ class TestPreprocessingFunctions(unittest.TestCase):
         with self.assertRaises(TypeError):
             preprocessing_functions.calculate_distance(lat1, lat2, lon1, lon2)
     
-    # def test_mask_df(row):
-        
-    #     return False
+    # Tests for mask_df
+    def test_mask_df_A(self):
+        """Smoke Test and at the same time also a one-shot test 
+        for only positive values for mask_df-function."""
+        idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
+        df_test = pd.Series(0, index=idx)
+        df_test.iloc[4000]= 1
+
+        masked_df_test = preprocessing_functions.mask_df(df_test)
+        result = np.sum(masked_df_test)
+
+        self.assertAlmostEqual(result, 0.0, places=6) 
+
+    def test_mask_df_B(self):
+        """One-shot test for only positive values for mask_df-function."""
+        idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
+        df_test = pd.Series(0, index=idx)
+        df_test.iloc[4000]= 1
+
+        masked_df_test = preprocessing_functions.mask_df(df_test)
+        result = sum(masked_df_test)
+
+        self.assertTrue(np.isnan(result)) 
+
+    # def test_mask_df_C(self):
+    #     """One-shot test for only negative values for mask_df-function."""
+    #     idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
+    #     df_test = pd.Series(0, index=idx)
+    #     df_test.iloc[4000]= -1
+
+    #     masked_df_test = preprocessing_functions.mask_df(df_test)
+    #     result = sum(masked_df_test)
+
+    #     self.assertTrue(np.isnan(result)) 
+
+    def test_mask_df_D(self):
+        """One-shot test for only positive values if right position masked for mask_df-function."""
+        idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
+        df_test = pd.Series(0, index=idx)
+        df_test.iloc[4000]= 1
+
+        masked_df_test = preprocessing_functions.mask_df(df_test)
+        result = np.mean(np.where(np.isnan(masked_df_test)))
+
+        self.assertAlmostEqual(result, 4000, places=1) # uncertainty of +-1
+
+    # def test_mask_df_E(self):
+    #     """One-shot test for only positive values if right length masked for mask_df-function."""
+    #     idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
+    #     df_test = pd.Series(0, index=idx)
+    #     df_test.iloc[4000]= 1
+
+    #     masked_df_test = preprocessing_functions.mask_df(df_test)
+    #     result = np.where(np.isnan(masked_df_test_small))[0].shape[0]
+
+    #     self.assertAlmostEqual(result, 1000, places=6) # uncertainty of +-2
     
+    # Tests for norm
     def test_norm_A(self):
         """Smoke Test and at the same time also a one-shot test 
         for only positive values in a np.array for norm-function."""
