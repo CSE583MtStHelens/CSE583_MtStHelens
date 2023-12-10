@@ -69,6 +69,7 @@ def mask_df(row: pd.Series = None):
     Raises:
         TypeError: If input is not a pd.Series.
         ValueError: If the index is not a DatetimeIndex.
+        ValueError: If some values are negative.
     """
     # Check if row is a pd.Series
     if not isinstance(row, pd.Series):
@@ -77,6 +78,10 @@ def mask_df(row: pd.Series = None):
     # Check if the index is a DatetimeIndex
     if not isinstance(row.index, pd.DatetimeIndex):
         raise ValueError("The index of 'row' must be a DatetimeIndex.")
+    
+    # Check if the values are 0 or positive
+    if not all(row.values >= 0):
+        raise ValueError("The values of 'row' must be 0 or positive.")
 
     peaks, properties = scipy.signal.find_peaks(
         row,
