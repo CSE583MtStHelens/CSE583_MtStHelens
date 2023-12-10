@@ -100,55 +100,51 @@ class TestPreprocessingFunctions(unittest.TestCase):
 
         self.assertTrue(np.isnan(result))
 
-    # def test_mask_df_C(self):
-    #     """One-shot test for only negative values for mask_df-function."""
-    #     idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
-    #     df_test = pd.Series(0, index=idx)
-    #     df_test.iloc[4000]= -1
+    def test_mask_df_C(self):
+        """One-shot test for only positive values and test position mask for mask_df-function."""
+        idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
+        df_test = pd.Series(0, index=idx)
+        df_test.iloc[4000]= 1
 
-    #     masked_df_test = preprocessing_functions.mask_df(df_test)
-    #     result = sum(masked_df_test)
+        masked_df_test = preprocessing_functions.mask_df(df_test)
+        result = np.mean(np.where(np.isnan(masked_df_test)))
 
-    #     self.assertTrue(np.isnan(result))
+        self.assertAlmostEqual(result, 4000, delta=1) # uncertainty of +-1
 
-    # def test_mask_df_D(self):
-    #     """One-shot test for only positive values and test position mask for mask_df-function."""
-    #     idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
-    #     df_test = pd.Series(0, index=idx)
-    #     df_test.iloc[4000]= 1
+    def test_mask_df_D(self):
+        """One-shot test for only positive values if right length masked for mask_df-function."""
+        idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
+        df_test = pd.Series(0, index=idx)
+        df_test.iloc[4000]= 1
 
-    #     masked_df_test = preprocessing_functions.mask_df(df_test)
-    #     result = np.mean(np.where(np.isnan(masked_df_test)))
+        masked_df_test = preprocessing_functions.mask_df(df_test)
+        result = np.where(np.isnan(masked_df_test))[0].shape[0]
 
-    #     self.assertAlmostEqual(result, 4000, places=1) # uncertainty of +-1
+        self.assertAlmostEqual(result, 1000, delta=2) # uncertainty of +-2
 
-    # def test_mask_df_E(self):
-    #     """One-shot test for only positive values if right length masked for mask_df-function."""
-    #     idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
-    #     df_test = pd.Series(0, index=idx)
-    #     df_test.iloc[4000]= 1
+    def test_mask_df_E(self):
+        """Test for df as input."""
+        idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
+        df_test = pd.DataFrame(0, index=idx, columns=['col1','col2'])
 
-    #     masked_df_test = preprocessing_functions.mask_df(df_test)
-    #     result = np.where(np.isnan(masked_df_test_small))[0].shape[0]
+        with self.assertRaises(TypeError):
+            preprocessing_functions.mask_df(df_test)
 
-    #     self.assertAlmostEqual(result, 1000, places=6) # uncertainty of +-2
+    def test_mask_df_F(self):
+        """Test for pd.Series as input but no DatetimeIndex."""
+        df_test = pd.Series(0,index=range(86000))
 
+        with self.assertRaises(ValueError):
+            preprocessing_functions.mask_df(df_test)
 
-    # def test_mask_df_F(self):
-    #     """Test for df as input."""
-    #     idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
-    #     df_test = pd.DataFrame(0, index=idx, columns=['col1','col2'])
+    def test_mask_df_G(self):
+        """Test for pd.Series as input but negative value."""
+        idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
+        df_test = pd.Series(0,index=idx)
+        df_test.iloc[4000]= -1
 
-    #     with self.assertRaises(TypeError):
-    #         preprocessing_functions.mask_df(df_test)
-
-    # def test_mask_df_G(self):
-    #     """Test for pd.Series as input but no DatetimeIndex."""
-    #     df_test = pd.DataFrame(range(86000))
-
-    #     with self.assertRaises(ValueError):
-    #         preprocessing_functions.mask_df(df_test)
-
+        with self.assertRaises(ValueError):
+            preprocessing_functions.mask_df(df_test)
 
     # Tests for norm
     def test_norm_A(self):
