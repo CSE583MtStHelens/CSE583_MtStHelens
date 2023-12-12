@@ -100,6 +100,7 @@ Input: path_file (str): The path to the CSV file to be read.\
 - A single column name (as str) or column index (as int) to select a specific column.\
 - A list of column names (as str) or column indices (as int) to select multiple columns.\
 - If 'cols' is not specified or set to None, the entire DataFrame will be returned.\
+
 Output: pd.DataFrame or pd.Series: The function returns a Pandas DataFrame or Series 
         containing the selected data from the CSV file.\
         The DataFrame is indexed by the 'time' column with timezone information removed.\
