@@ -63,7 +63,7 @@ Some abbreviations:<br>
 - **PGA:** Peak Ground Acceleration is giving you the maximum absolute value in the 10 minute time window after deviate the seismig ground velocity time series.
 - **zsc:** z-score normalization is a technique that scales the measurement point of a feature to have a mean of 0 and a standard deviation of 1. This is done by subtracting the mean of the feature from each measurement point, and then dividing by the standard deviation. We do this in the log-space
 
-## Repository strucutre
+## Repository Structure
 ```bash
 ├── LICENSE
 ├── README.md
@@ -71,7 +71,7 @@ Some abbreviations:<br>
 │   ├── Seismomech_Technology_Review.pptx
 │   ├── Use_Case.md
 │   ├── User_story.md
-│   ├── component_diagram (2).pdf
+│   ├── component_diagram.pdf
 │   └── component_specifications.md
 ├── environment.yml
 ├── example
@@ -85,12 +85,6 @@ Some abbreviations:<br>
 │   └── __init__.py
 ├── mtsthelens
 │   ├── __init__.py
-│   │   ├── __init__.cpython-312.pyc
-│   │   ├── manipulation_functions.cpython-310.pyc
-│   │   ├── manipulation_functions.cpython-312.pyc
-│   │   ├── plotting_functions.cpython-310.pyc
-│   │   ├── plotting_functions.cpython-312.pyc
-│   │   └── preprocessing_functions.cpython-312.pyc
 │   ├── manipulation_functions.py
 │   ├── plotting_functions.py
 │   └── preprocessing_functions.py
