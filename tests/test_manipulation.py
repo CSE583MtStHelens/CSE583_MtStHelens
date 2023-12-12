@@ -6,7 +6,6 @@ import sys,os
 import numpy as np
 import pandas as pd
 import pdb
-import pytest
 
 #file directory manipulation - relative import
 current_directory = os.getcwd()
