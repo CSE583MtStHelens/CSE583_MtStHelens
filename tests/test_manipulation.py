@@ -195,19 +195,24 @@ class Test_Manipulation(unittest.TestCase):
         assert not df_result.empty
 
     def test_df2dict_returns_dict(self):
+        """Smoke Test and at the same time also a one-shot test with 
+        a DataFrame as input and a dictionary as output for df2dict-function."""
         result = manipulation_functions.df2dict(self.sample_df)
         self.assertIsInstance(result, dict)
 
     def test_df2dict_returns_expected_keys(self):
+        """One-shot test which compares df columns to dict keys."""
         result = manipulation_functions.df2dict(self.sample_df)
         expected_keys = self.sample_df.index.year.unique().tolist()
         self.assertListEqual(list(result.keys()), expected_keys)
 
     def test_df2dict_invalid_group_by_raises_error(self):
+        """Test with invalide groupe passed."""
         with self.assertRaises(ValueError):
             manipulation_functions.df2dict(self.sample_df, group_by='invalid_group')
 
     def test_df2dict_non_datetime_index_raises_error(self):
+        """Test with indeces not beeing a datetime value."""
         non_datetime_index_df = pd.DataFrame({'value': [1, 2, 3]}, index=[1, 2, 3])
         with self.assertRaises(ValueError):
             manipulation_functions.df2dict(non_datetime_index_df)
