@@ -19,8 +19,8 @@ opts = dict(
     packages = ['mtsthelens', 'tests', 'example'],
     package_data = {'example':['example_data/*.*']},
     include_package_data = True,
-    setup_requires = ['pytest-runner', 'flake8'],
-    tests_requires = ['pytest'],
+    install_requires = ['pytest-runner', 'flake8'],
+    tests_require = ['pytest'],
 )
 
 if __name__=='__main__':
