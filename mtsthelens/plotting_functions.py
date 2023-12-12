@@ -22,7 +22,7 @@ def plot_stack_vs_raw(stack: pd.DataFrame, raw_data: pd.DataFrame):
     fig, axes = plt.subplots(nrows=n_stations, ncols=1, figsize=(10, 6 * n_stations))
     for i, col in enumerate(stack.columns):
         stack[col].plot(ax=axes[i])
-        raw_data[col].plot(ax=axes[i], alpha=0.6)
+        raw_data[col].plot(ax=axes[i], alpha=0.5)
         axes[i].set_title(f"Station {col}")
         axes[i].legend(["Manipulated Data", "Raw Data"])
     return

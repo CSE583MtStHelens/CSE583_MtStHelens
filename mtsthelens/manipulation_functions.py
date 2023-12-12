@@ -44,7 +44,7 @@ def filter_data(stack):
     return filt_stack
 
 
-def stackInTime(df):
+def stack_in_time(df):
     """
     Name: Stacking in Time\
     What it does: Analyses data over multiple years to find the average seasonality data,\
@@ -81,7 +81,7 @@ def stackInTime(df):
 """
 
 
-def stackInSpace(df_rsam_median):
+def stack_in_space(df_rsam_median):
     """
     Name: Stacking in Space\
     What it does: Analyses Data accross all stations to potential\
@@ -116,7 +116,7 @@ def stackInSpace(df_rsam_median):
     return df_median_stackSpace, df_stackSpace_year
 
 
-def stackSpace_yearParam(df_stackSpace_year):
+def stack_space_year_param(df_stackSpace_year):
     """
     The df_yearlyParam is the statistical outputs, like min, max, mean, etc, of each year's data, which is from each column of the input dataframe.
     """
