@@ -4,3 +4,6 @@ data/*.csv
 .DS_Store
 **/__pycache__/
 **/.ipynb_checkpoints
+build/
+dist/
+.eggs/
