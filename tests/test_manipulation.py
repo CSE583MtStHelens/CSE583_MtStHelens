@@ -98,11 +98,11 @@ class Test_Manipulation(unittest.TestCase):
         expected_shape = (50, 1)  # Stacking across all stations should result in one column
         self.assertEqual(df_median_stackSpace.shape, expected_shape)
 
-    # Check if the years in the stacked DataFrame match the input DataFrame
+        # Check if the years in the stacked DataFrame match the input DataFrame
         self.assertListEqual(df_stackSpace_year.columns.to_list(), [df_rsam_median.index.year.tolist()[0]])
 
     def test_stackInSpace_C(self):
-                # Create a sample DataFrame for testing
+        # Create a sample DataFrame for testing
         data = {'Station1': np.random.rand(50),
                 'Station2': np.random.rand(50),
                 'Station3': np.random.rand(50),
@@ -217,12 +217,55 @@ class Test_Manipulation(unittest.TestCase):
         result_df, _ = manipulation_functions.stackInSpace(leap_year_df)
         self.assertEqual(len(result_df), 2)
 
-    def test_stack_in_time(self):
+    def test_stackInTime_A(self):
+        """
+        Tests the stackInTime function 
+        Creates synthetic data and tests whether the funciton runs without errors
+        Tests that the output is not empty
+        """
+        # Create a sample DataFrame for testing
+        dates = pd.date_range(start='2001-01-01', end='2004-01-05', freq='10T')
+        df = pd.DataFrame({
+            'Station1': np.random.randn(len(dates)),
+            'Station2': 100 * np.random.randn(len(dates)) - 50,
+            'Station3': np.random.randn(len(dates)),
+        }, index=dates)
+        df['Station3']['2004-01-05 09:30:40'] = None
+
+        # Test if the function runs without errors
+        seasonal_data, data_no_seasonal = manipulation_functions.stackInTime(df)
+        
+        # Test that the output DataFrames are not empty
+        self.assertFalse(seasonal_data.empty)
+        self.assertFalse(data_no_seasonal.empty)
+
+    def test_stackInTime_B(self):
+        """
+        Tests the stackInTime function 
+        Creates synthetic data and tests whether the funciton runs without errors
+        Tests the output types are as expected
+        """
+        # Create a sample DataFrame for testing
+        dates = pd.date_range(start='2001-01-01', end='2004-01-05', freq='10T')
+        df = pd.DataFrame({
+            'Station1': np.random.randn(len(dates)),
+            'Station2': 100 * np.random.randn(len(dates)) - 50,
+            'Station3': np.random.randn(len(dates)),
+        }, index=dates)
+        df['Station3']['2004-01-05 09:30:40'] = None
+
+        # Test if the function runs without errors
+        seasonal_data, data_no_seasonal = manipulation_functions.stackInTime(df)
+        
+        # Check if the output types are as expected
+        self.assertIsInstance(seasonal_data, pd.DataFrame)
+        self.assertIsInstance(data_no_seasonal, pd.DataFrame)
+
+    def test_stackInTime_C(self):
         """
         Test the stackInTime function 
         Creates synthetic data and tests whether the funciton runs without errors
-        Tests for negative data, and some stations lacking all the data
-        Ensures that the type and shape of the output data is as expected and that the original df is unaltered
+        Ensures the output shape is as expected
         """
         # Create a sample DataFrame for testing
         dates = pd.date_range(start='2001-01-01', end='2004-01-05', freq='10T')
@@ -237,13 +280,28 @@ class Test_Manipulation(unittest.TestCase):
         # Test if the function runs without errors
         seasonal_data, data_no_seasonal = manipulation_functions.stackInTime(df)
 
-        # Check if the output types are as expected
-        self.assertIsInstance(seasonal_data, pd.DataFrame)
-        self.assertIsInstance(data_no_seasonal, pd.DataFrame)
-
         # Check if the output DataFrames have the correct shape
         self.assertEqual(seasonal_data.shape, (24 * 6 * 365, 3))  #  24 hours * 6 10-minute intervals * 365 days
         self.assertEqual(data_no_seasonal.shape, df.shape)
+
+    def test_stackInTime_D(self):
+        """
+        Test the stackInTime function 
+        Creates synthetic data and tests whether the funciton runs without errors
+        Tests that the function does not manipulate the input dataframe
+        """
+        # Create a sample DataFrame for testing
+        dates = pd.date_range(start='2001-01-01', end='2004-01-05', freq='10T')
+        df = pd.DataFrame({
+            'Station1': np.random.randn(len(dates)),
+            'Station2': 100 * np.random.randn(len(dates)) - 50,
+            'Station3': np.random.randn(len(dates)),
+        }, index=dates)
+        df['Station3']['2004-01-05 09:30:40'] = None
+        df_copy = df.copy()
+
+        # Test if the function runs without errors
+        seasonal_data, data_no_seasonal = manipulation_functions.stackInTime(df)
 
         # Check if the input DataFrame is not modified
         self.assertTrue(df.equals(df_copy))
