@@ -1,4 +1,4 @@
-## Functional specification of the MtStHelens from SeismoMech
+# Functional specification of the MtStHelens from SeismoMech
 Team: Yash Bhangale, Shreeya Gadgil, Manuela Köpfli, Callum Keddie, Guiliang Zheng
 Course Project: CSE 583 | Team Repo: https://github.com/CSE583MtStHelens/CSE583_MtStHelens
 
