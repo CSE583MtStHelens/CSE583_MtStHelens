@@ -7,7 +7,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
 import sys
-sys.path.append('../CSE583_MtStHelens')
+
+# File directory manipulation - relative import
+current_directory = os.getcwd()
+# Go back one folder level
+parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
+sys.path.insert(0, parent_directory)
+from mtsthelens import manipulation_functions
 
 def filter_data(stack):
 
@@ -92,9 +98,9 @@ def stackInSpace(df_rsam_median):
     return df_median_stackSpace, df_stackSpace_year
 
 def stackSpace_yearParam(df_stackSpace_year):
-    '''
+    """
      The df_yearlyParam is the statistical outputs, like min, max, mean, etc, of each year's data, which is from each column of the input dataframe. 
-     '''
+    """
     df_yearlyParam = pd.DataFrame(np.nan,index=pd.Series(['max','min','mean','median']), columns=df_stackSpace_year.columns)
     for col in df_stackSpace_year.columns:
         df_yearlyParam[col].loc['max'] = df_stackSpace_year[col].max()
