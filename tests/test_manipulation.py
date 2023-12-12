@@ -100,7 +100,7 @@ class Test_Manipulation(unittest.TestCase):
 
     # Check if the years in the stacked DataFrame match the input DataFrame
         self.assertListEqual(df_stackSpace_year.columns.to_list(), 
-                             df_rsam_median.index.year.tolist()[0]])
+                             df_rsam_median.index.year.tolist()[0])
 
     def test_stackInSpace_C(self):
         # Create a sample DataFrame for testing
