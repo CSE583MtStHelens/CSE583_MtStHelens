@@ -79,9 +79,6 @@ def mask_df(row: pd.Series = None):
     # Check if the index is a DatetimeIndex
     if not isinstance(row.index, pd.DatetimeIndex):
         raise ValueError("The index of 'row' must be a DatetimeIndex.")
-    # Check if the values are 0 or positive
-    if not all(row.values >= 0):
-        raise ValueError("The values of 'row' must be 0 or positive.")
 
     peaks, properties = scipy.signal.find_peaks(
         row,
@@ -187,15 +184,9 @@ def read_data(path_file: str = None, cols=None):
     if "time" not in df.columns:
         raise ValueError("A column with the name time must exist.")
 
-    if any(not isinstance(value, str) for value in df['time']):
-        raise TypeError('The time column must contain strings.')
-
     df.set_index("time", inplace=True)
     df.index = pd.to_datetime(df.index).tz_localize(None)
-    if any(df.values) != (int or float):
-        raise TypeError(
-            "The columns except for the time column can only contain int or float values."
-        )
+
     if cols is not None:
         if isinstance(cols, str):
             df = df[cols]
