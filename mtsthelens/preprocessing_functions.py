@@ -79,7 +79,6 @@ def mask_df(row: pd.Series = None):
     # Check if the index is a DatetimeIndex
     if not isinstance(row.index, pd.DatetimeIndex):
         raise ValueError("The index of 'row' must be a DatetimeIndex.")
-
     # Check if the values are 0 or positive
     if not all(row.values >= 0):
         raise ValueError("The values of 'row' must be 0 or positive.")
@@ -152,7 +151,8 @@ def read_data(path_file: str = None, cols=None):
         cols (str, int, list, optional): The 'cols' parameter is optional and allows you to specify
         which column(s) to select from the DataFrame.
             - A single column name (as str) or column index (as int) to select a specific column.
-            - A list of column names (as str) or column indices (as int) to select multiple columns.
+            - List of column names (as str) or column indices (as int) to select multiple columns.
+            - Array of column names (as str) or column indices (as int) to select multiple columns.
             - If 'cols' is not specified or set to None, the entire DataFrame will be returned.
 
     Returns:
@@ -180,19 +180,18 @@ def read_data(path_file: str = None, cols=None):
     """
 
     if not isinstance(path_file, str):
-        raise TypeError("path_file must be a string.")
+        raise TypeError(f"path_file must be a string not a {type(path_file)}.")
 
     df = pd.read_csv(path_file)
 
     if "time" not in df.columns:
         raise ValueError("A column with the name time must exist.")
 
-    # if any(df['time']) != str:
-    #     raise TypeError('The time column must contain strings.')
+    if any(not isinstance(value, str) for value in df['time']):
+        raise TypeError('The time column must contain strings.')
 
     df.set_index("time", inplace=True)
     df.index = pd.to_datetime(df.index).tz_localize(None)
-
     if any(df.values) != (int or float):
         raise TypeError(
             "The columns except for the time column can only contain int or float values."

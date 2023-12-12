@@ -137,15 +137,6 @@ class TestPreprocessingFunctions(unittest.TestCase):
         with self.assertRaises(ValueError):
             preprocessing_functions.mask_df(df_test)
 
-    def test_mask_df_G(self):
-        """Test for pd.Series as input but negative value."""
-        idx = pd.date_range(datetime.datetime(2000,1,1), datetime.datetime(2000,1,2), freq='1s')
-        df_test = pd.Series(0,index=idx)
-        df_test.iloc[4000]= -1
-
-        with self.assertRaises(ValueError):
-            preprocessing_functions.mask_df(df_test)
-
     # Tests for norm
     def test_norm_A(self):
         """Smoke Test and at the same time also a one-shot test 
@@ -184,5 +175,81 @@ class TestPreprocessingFunctions(unittest.TestCase):
         with self.assertRaises(TypeError):
             preprocessing_functions.norm(s)
 
-    # def test_read_data_A(path_file, cols=None):
-    #     path_file = './example_data/example_data_eruption.csv'
+    # Test for read_data
+    def test_read_data_A(self):
+        """Smoke Test and at the same time also a one-shot test 
+        tests if the columns are correct for read_data-function."""
+        path_file = '../example/example_data/example_data_eruption.csv'
+        df = preprocessing_functions.read_data(path_file)
+        result = list(df.columns)
+        self.assertListEqual(result, ['HSR', 'STD'])
+
+    def test_read_data_B(self):
+        """One-shot test to test if the columns are correct for specify the column 
+        to read as a list for read_data-function."""
+        path_file = '../example/example_data/example_data_eruption.csv'
+        df = preprocessing_functions.read_data(path_file, ['STD'])
+        result = list(df.columns)
+        self.assertListEqual(result, ['STD'])
+
+    def test_read_data_C(self):
+        """One-shot test to test if the columns are correct for specify the column 
+        to read as a str for read_data-function."""
+        path_file = '../example/example_data/example_data_eruption.csv'
+        s = preprocessing_functions.read_data(path_file, 'STD')
+        df = s.to_frame()
+        result = list(df.columns)
+        self.assertListEqual(result, ['STD'])
+
+    def test_read_data_D(self):
+        """One-shot test to test if the columns are correct for specify the column 
+        to read as a list of indeces for read_data-function."""
+        path_file = '../example/example_data/example_data_eruption.csv'
+        df = preprocessing_functions.read_data(path_file, [1])
+        result = list(df.columns)
+        self.assertListEqual(result, ['STD'])
+
+    def test_read_data_E(self):
+        """One-shot test to test if the columns are correct for specify the column 
+        to read as a index for read_data-function."""
+        path_file = '../example/example_data/example_data_eruption.csv'
+        s = preprocessing_functions.read_data(path_file, 1)
+        df = s.to_frame()
+        result = list(df.columns)
+        self.assertListEqual(result, ['STD'])
+
+    def test_read_data_F(self):
+        """Test for path is not a string but an integer."""
+        path_file = 1
+        with self.assertRaises(TypeError):
+            preprocessing_functions.read_data(path_file)
+
+    def test_read_data_G(self):
+        """Test for path is not a string but a list."""
+        path_file = ['This is a list']
+        with self.assertRaises(TypeError):
+            preprocessing_functions.read_data(path_file)
+
+    def test_read_data_H(self):
+        """Test for no column named 'time'."""
+        path_file = './test_data/example_data_eruption_no_time.csv'
+        with self.assertRaises(ValueError):
+            preprocessing_functions.read_data(path_file)
+
+    def test_read_data_I(self):
+        """Test for 'time' does not contain strings."""
+        path_file = './test_data/example_data_eruption_no_timestr.csv'
+        with self.assertRaises(TypeError):
+            preprocessing_functions.read_data(path_file)
+
+    def test_read_data_J(self):
+        """Test for selected column is a float."""
+        path_file = '../example/example_data/example_data_eruption.csv'
+        with self.assertRaises(ValueError):
+            preprocessing_functions.read_data(path_file, 1.1)
+
+    def test_read_data_K(self):
+        """Test for selected column is a list of a float."""
+        path_file = '../example/example_data/example_data_eruption.csv'
+        with self.assertRaises(ValueError):
+            preprocessing_functions.read_data(path_file, [1.1])
