@@ -55,12 +55,40 @@ Output: Dict: A dictionary where keys are years, months, or days,\
 ## plotting function -- main function
 ### Component #1
 Name: plot stack vs raw\
-What it does: Group a data frame or time series by year, month, or day based on the DatetimeIndex.\
-Input: df (pd.DataFrame or pd. Series): The input DataFrame or time series with a DatetimeIndex.\
-        group_by (str, optional): The time unit to group by. \
-        Accepted values are 'year', 'month', or 'day'. Defaults to 'year'.\
-Output: Dict: A dictionary where keys are years, months, or days,\
-                 and values are corresponding data frames or time series.
+What it does: plots stacked data with raw data for comparison.\
+Input: stack: Can be time stack with seasonality removed or filtered stack.\
+Output: An image comparing stacked data and raw data.
+
+### Component #2
+Name: plot space params\
+What it does: Plots the minimum, maximum, mean, and median value of the space-stacked data for each year.\
+Input: yearly_params: min, max, mean, and median values of the space stack data for each year.\
+Output: Image that compares min, max, mean, and median values for each year.
+
+### Component #3
+Name: plot extrusion\
+What it does: Plots and compares extrusion rate with the raw DSAR, time stacked DSAR, and Filtered DSAR.\
+Input: extrusion_data: Contains Date of Photography, Total Volume Change,
+        Total Volume Change Rate, Extruded Lava Volume, and Lava Extrusion Rate.\
+            raw_data: Contains time, and readings for stations.\
+            time_stack: Time Stack with seasonality removed from the raw data.\
+            filtered_stack: Filtered Stack of the raw data.\
+Output: Image that compares extrusion rate with values for raw data, time-stacked data, and filtered data.
+
+### Component #4
+Name: min max values\
+What it does: Compute the minimum and maximum values for each row in a dictionary of DataFrames.\
+Input: read_dictionary (Dict): A dictionary where keys are DataFrame names and values are DataFrames.\
+Output: tuple: Two DataFrames, the first containing the minimum values per row, and the second containing the maximum values.\
+    Compute the minimum and maximum values for each row in a dictionary of DataFrames.
+
+### Component #5
+Name: plot main\
+What it does: Plots the map of the region required using PyGMT.
+
+### Component #6
+Name: animation\
+What it does: Animates the data over the years on the map.
 
 ## preprocessing function -- main function
 ### Component #1
