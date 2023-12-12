@@ -97,14 +97,14 @@ What it does: Group a data frame or time series by year, month, or day based on 
 Input: path_file (str): The path to the CSV file to be read.\
         cols (str, int, list, optional): The 'cols' parameter is optional and allows you to specify 
         which column(s) to select from the DataFrame.\
-            -- A single column name (as str) or column index (as int) to select a specific column.\
-            -- A list of column names (as str) or column indices (as int) to select multiple columns.\
-            -- If 'cols' is not specified or set to None, the entire DataFrame will be returned.\
+- A single column name (as str) or column index (as int) to select a specific column.\
+- A list of column names (as str) or column indices (as int) to select multiple columns.\
+- If 'cols' is not specified or set to None, the entire DataFrame will be returned.\
 Output: pd.DataFrame or pd.Series: The function returns a Pandas DataFrame or Series 
         containing the selected data from the CSV file.\
         The DataFrame is indexed by the 'time' column with timezone information removed.\
-        -- If 'cols' specifies a single column, the function returns a Series.\
-        -- If 'cols' specify multiple columns, the function returns a DataFrame.
+- If 'cols' specifies a single column, the function returns a Series.\
+- If 'cols' specify multiple columns, the function returns a DataFrame.
 
 # Interactions to accomplish use cases
 For the use case 1 described in the functional specifications, where a seismic researcher tries to find out the correlations between the seismic attenuation and the magma extrusion rate during the eruption of a volcano， the researcher would first pre-process their collected data using our pre-processing function to the specific format the rest of the code need. They would then, use the manipulation function to manipulate the data, either stack the data in time to find the trend with seasonality removed or stack in space to find the correlation between the climate and the region seismic activity of the region over the year. They would use those data to generate the plot using our plotting function to visualize the data and find the correlation between the seismic data and the factors they are interested in. 
