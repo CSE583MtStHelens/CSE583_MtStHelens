@@ -6,6 +6,7 @@ import numpy as np
 import scipy
 import scipy.signal
 
+
 def calculate_distance(lat1, lat2, lon1, lon2):
     """
     Calculate the distance between two points on the Earth's surface using the Haversine formula.
@@ -78,7 +79,7 @@ def mask_df(row: pd.Series = None):
     # Check if the index is a DatetimeIndex
     if not isinstance(row.index, pd.DatetimeIndex):
         raise ValueError("The index of 'row' must be a DatetimeIndex.")
-    
+
     # Check if the values are 0 or positive
     if not all(row.values >= 0):
         raise ValueError("The values of 'row' must be 0 or positive.")
@@ -90,9 +91,14 @@ def mask_df(row: pd.Series = None):
     )
     row_masked = row.copy()
     try:
-        row_masked[row_masked>min(row_masked.iloc[
-            properties['left_bases'][0]:properties['right_bases'][0]])
-            ]=np.nan
+        row_masked[
+            row_masked
+            > min(
+                row_masked.iloc[
+                    properties["left_bases"][0] : properties["right_bases"][0]
+                ]
+            )
+        ] = np.nan
         row_masked.iloc[
             properties["left_bases"][0] - 500 : properties["right_bases"][0] + 500
         ] = np.nan
@@ -109,14 +115,14 @@ def norm(s):
     This function takes a numeric array 's' and normalizes it by scaling the values
     within the range [0, 1]. It calculates the range of the input array by finding the
     difference between the maximum and minimum values. Then, it scales all values in 's'
-    proportionally to this range, resulting in a new array 's_norm' with values 
+    proportionally to this range, resulting in a new array 's_norm' with values
     between 0 (minimum) and 1 (maximum).
 
     Args:
         s(np.array or pd.Series): A numeric array or Pandas Series to be normalized.
 
     Returns:
-        s_norm(np.array or pd.Series): A normalized version of the input array, 
+        s_norm(np.array or pd.Series): A normalized version of the input array,
                                         with values between 0 and 1.
 
     Raises:
@@ -143,14 +149,14 @@ def read_data(path_file: str = None, cols=None):
 
     Args:
         path_file (str): The path to the CSV file to be read.
-        cols (str, int, list, optional): The 'cols' parameter is optional and allows you to specify 
+        cols (str, int, list, optional): The 'cols' parameter is optional and allows you to specify
         which column(s) to select from the DataFrame.
             - A single column name (as str) or column index (as int) to select a specific column.
             - A list of column names (as str) or column indices (as int) to select multiple columns.
             - If 'cols' is not specified or set to None, the entire DataFrame will be returned.
 
     Returns:
-        pd.DataFrame or pd.Series: The function returns a Pandas DataFrame or Series 
+        pd.DataFrame or pd.Series: The function returns a Pandas DataFrame or Series
         containing the selected data from the CSV file.
         The DataFrame is indexed by the 'time' column with timezone information removed.
         - If 'cols' specifies a single column, the function returns a Series.
@@ -188,7 +194,9 @@ def read_data(path_file: str = None, cols=None):
     df.index = pd.to_datetime(df.index).tz_localize(None)
 
     if any(df.values) != (int or float):
-        raise TypeError('The columns except for the time column can only contain int or float values.')
+        raise TypeError(
+            "The columns except for the time column can only contain int or float values."
+        )
     if cols is not None:
         if isinstance(cols, str):
             df = df[cols]
