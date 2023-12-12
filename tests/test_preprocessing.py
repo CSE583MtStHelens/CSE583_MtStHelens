@@ -137,6 +137,7 @@ class TestPreprocessingFunctions(unittest.TestCase):
         with self.assertRaises(ValueError):
             preprocessing_functions.mask_df(df_test)
 
+
     # Tests for norm
     def test_norm_A(self):
         """Smoke Test and at the same time also a one-shot test 
