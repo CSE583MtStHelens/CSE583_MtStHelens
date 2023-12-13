@@ -39,12 +39,12 @@ class Test_Manipulation(unittest.TestCase):
         )
 
         # smoke test whether the two functions works
-        self.assertIsNotNone(manipulation_functions.stackInSpace(df))
-        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(
+        self.assertIsNotNone(manipulation_functions.stack_in_space(df))
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stack_in_space(
             df
         )
         self.assertIsNotNone(
-            manipulation_functions.stackSpace_yearParam(df_stackSpace_year)
+            manipulation_functions.stack_space_year_param(df_stackSpace_year)
         )
 
     def test_smoke_manipulation_B(self):
@@ -65,12 +65,12 @@ class Test_Manipulation(unittest.TestCase):
         )
 
         # smoke test whether the two functions works
-        self.assertIsNotNone(manipulation_functions.stackInSpace(df))
-        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(
+        self.assertIsNotNone(manipulation_functions.stack_in_space(df))
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stack_in_space(
             df
         )
         self.assertIsNotNone(
-            manipulation_functions.stackSpace_yearParam(df_stackSpace_year)
+            manipulation_functions.stack_space_year_param(df_stackSpace_year)
         )
 
     def test_stackInSpace_A(self):
@@ -90,7 +90,7 @@ class Test_Manipulation(unittest.TestCase):
         )
 
         # Apply the stackInSpace function
-        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stack_in_space(
             df
         )
 
@@ -119,7 +119,7 @@ class Test_Manipulation(unittest.TestCase):
         df = pd.DataFrame(data, index=pd.date_range("2009-01-01", periods=50, freq="D"))
 
         # Apply the stackInSpace function
-        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stack_in_space(
             df
         )
 
@@ -148,7 +148,7 @@ class Test_Manipulation(unittest.TestCase):
         }
         df = pd.DataFrame(data, index=pd.date_range("2009-01-01", periods=50, freq="D"))
 
-        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stackInSpace(
+        df_median_stackSpace, df_stackSpace_year = manipulation_functions.stack_in_space(
             df
         )
         # Test that the output DataFrames are not empty
@@ -179,7 +179,7 @@ class Test_Manipulation(unittest.TestCase):
         )
 
         # Test if the function returns a DataFrame with the correct shape
-        df_result = manipulation_functions.stackSpace_yearParam(df_stackSpace_year)
+        df_result = manipulation_functions.stack_space_year_param(df_stackSpace_year)
 
         self.assertIsInstance(df_result, pd.DataFrame)
         self.assertEqual(
@@ -246,7 +246,7 @@ class Test_Manipulation(unittest.TestCase):
         )
 
         # Test if the function returns a DataFrame with the correct shape
-        df_result = manipulation_functions.stackSpace_yearParam(df_stackSpace_year)
+        df_result = manipulation_functions.stack_space_year_param(df_stackSpace_year)
 
         self.assertIsInstance(df_result, pd.DataFrame)
         self.assertEqual(
@@ -284,7 +284,7 @@ class Test_Manipulation(unittest.TestCase):
             ],
         )
 
-        df_result = manipulation_functions.stackSpace_yearParam(df_stackSpace_year)
+        df_result = manipulation_functions.stack_space_year_param(df_stackSpace_year)
         # Test that the output DataFrames are not empty
         assert not df_result.empty
 
@@ -316,7 +316,7 @@ class Test_Manipulation(unittest.TestCase):
             {"value": [1, 2, 3]},
             index=pd.to_datetime(["2020-02-28", "2020-02-29", "2020-03-01"]),
         )
-        result_df, _ = manipulation_functions.stackInSpace(leap_year_df)
+        result_df, _ = manipulation_functions.stack_in_space(leap_year_df)
         self.assertEqual(len(result_df), 2)
 
     def test_stackInTime_A(self):
@@ -338,7 +338,7 @@ class Test_Manipulation(unittest.TestCase):
         df["Station3"]["2004-01-05 09:30:40"] = None
 
         # Test if the function runs without errors
-        seasonal_data, data_no_seasonal = manipulation_functions.stackInTime(df)
+        seasonal_data, data_no_seasonal = manipulation_functions.stack_in_space(df)
 
         # Test that the output DataFrames are not empty
         self.assertFalse(seasonal_data.empty)
@@ -363,7 +363,7 @@ class Test_Manipulation(unittest.TestCase):
         df["Station3"]["2004-01-05 09:30:40"] = None
 
         # Test if the function runs without errors
-        seasonal_data, data_no_seasonal = manipulation_functions.stackInTime(df)
+        seasonal_data, data_no_seasonal = manipulation_functions.stack_in_space(df)
 
         # Check if the output types are as expected
         self.assertIsInstance(seasonal_data, pd.DataFrame)
@@ -390,7 +390,7 @@ class Test_Manipulation(unittest.TestCase):
         df_copy = df.copy()
 
         # Test if the function runs without errors
-        seasonal_data, data_no_seasonal = manipulation_functions.stackInTime(df)
+        seasonal_data, data_no_seasonal = manipulation_functions.stack_in_time(df)
 
         # Check if the output DataFrames have the correct shape
         self.assertEqual(
@@ -418,7 +418,7 @@ class Test_Manipulation(unittest.TestCase):
         df_copy = df.copy()
 
         # Test if the function runs without errors
-        seasonal_data, data_no_seasonal = manipulation_functions.stackInTime(df)
+        seasonal_data, data_no_seasonal = manipulation_functions.stack_in_time(df)
 
         # Check if the input DataFrame is not modified
         self.assertTrue(df.equals(df_copy))
