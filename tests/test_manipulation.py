@@ -338,7 +338,7 @@ class Test_Manipulation(unittest.TestCase):
         df["Station3"]["2004-01-05 09:30:40"] = None
 
         # Test if the function runs without errors
-        seasonal_data, data_no_seasonal = manipulation_functions.stack_in_space(df)
+        seasonal_data, data_no_seasonal = manipulation_functions.stack_in_time(df)
 
         # Test that the output DataFrames are not empty
         self.assertFalse(seasonal_data.empty)
@@ -363,7 +363,7 @@ class Test_Manipulation(unittest.TestCase):
         df["Station3"]["2004-01-05 09:30:40"] = None
 
         # Test if the function runs without errors
-        seasonal_data, data_no_seasonal = manipulation_functions.stack_in_space(df)
+        seasonal_data, data_no_seasonal = manipulation_functions.stack_in_time(df)
 
         # Check if the output types are as expected
         self.assertIsInstance(seasonal_data, pd.DataFrame)
