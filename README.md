@@ -67,30 +67,56 @@ Some abbreviations:<br>
 ```bash
 ├── LICENSE
 ├── README.md
+├── __init.py__
 ├── docs
+│   ├── Component_Diagram.pdf
+│   ├── Component_Specifications.md
+│   ├── Functional_Specifications.md
 │   ├── Seismomech_Technology_Review.pptx
 │   ├── Use_Case.md
-│   ├── User_story.md
-│   ├── component_diagram.pdf
-│   └── component_specifications.md
+│   └── User_Story.md
 ├── environment.yml
 ├── example
+│   ├── __init__.py
 │   ├── example_data
 │   │   ├── dome_extrusion.txt
 │   │   ├── example_data_eruption.csv
 │   │   ├── mt_st_helens_activity.txt
 │   │   ├── sta_log_long.txt
+│   │   ├── stat_map.npy
 │   │   └── synthetic_data.csv
 │   ├── example_tutorial.ipynb
-│   └── __init__.py
+│   └── output
+│       ├── data
+│       │   └── my_file.npy
+│       ├── dome_extrusion.txt
+│       ├── example_data_eruption.csv
+│       ├── example_data_eruption_seasonality_removed.csv
+│       ├── example_data_eruption_stacktime.csv
+│       ├── mt_st_helens_activity.txt
+│       ├── plot
+│       │   └── animation
+│       │       ├── median
+│       │       │   ├── median_2004.png
+│       │       │   └── median_2005.png
+│       │       ├── medianmedian_2004.png
+│       │       └── medianmedian_2005.png
+│       ├── sta_log_long.txt
+│       ├── stat_map.npy
+│       └── synthetic_data.csv
 ├── mtsthelens
 │   ├── __init__.py
+│   │   ├── manipulation_functions.cpython-312.pyc
+│   │   ├── plotting_functions.cpython-312.pyc
+│   │   └── preprocessing_functions.cpython-312.pyc
 │   ├── manipulation_functions.py
 │   ├── plotting_functions.py
 │   └── preprocessing_functions.py
+├── myvideo30.gif
+├── setup.py
 └── tests
     ├── __init__.py
-    ├── manipulation_test.py
-    ├── plotting_test.py
-    └── preprocessing_test.py
+    ├── test_manipulation.py
+    ├── test_plotting.py
+    └── test_preprocessing.py
 ```
