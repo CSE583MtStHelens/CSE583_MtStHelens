@@ -173,7 +173,7 @@ def map_plot(
     )
     fig.colorbar(frame='af+l"DSAR"')
     # Save figure
-    output_directory = f"./output/plot/animation/{parameter}"
+    output_directory = f"./output/plot/animation/{parameter}/"
     # Create the output directory if it doesn't exist
     os.makedirs(output_directory, exist_ok=True)
     fig.savefig(output_directory + f"{parameter}_{key}.png")
