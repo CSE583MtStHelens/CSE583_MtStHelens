@@ -11,7 +11,7 @@ current_directory = os.getcwd()
 # Go back one folder level
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 sys.path.insert(0, parent_directory)
-from mtsthelens import preprocessing_functions
+from ..mtsthelens import preprocessing_functions
 
 # This script includes test to test the preprocessing functions.
 # To run the test navigate into the directory

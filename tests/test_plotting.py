@@ -13,7 +13,7 @@ current_directory = os.getcwd()
 # Go back one folder level
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 sys.path.insert(0, parent_directory)
-from mtsthelens import plotting_functions
+from ..mtsthelens import plotting_functions
 
 
 # Define a class in which the tests will run
