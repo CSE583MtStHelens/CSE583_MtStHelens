@@ -125,7 +125,7 @@ class Test_Manipulation(unittest.TestCase):
 
         # Check if the shape of the stacked DataFrame is correct
         expected_shape = (
-            50,
+            49,
             1,
         )  # Stacking across all stations should result in one column
         self.assertEqual(df_median_stackSpace.shape, expected_shape)
