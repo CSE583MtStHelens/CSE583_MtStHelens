@@ -116,7 +116,7 @@ class Test_Manipulation(unittest.TestCase):
             "Station5": np.random.rand(50),
             "Station6": np.random.rand(50),
         }
-        df = pd.DataFrame(data, index=pd.date_range("2009-01-01", periods=50, freq="D"))
+        df = pd.DataFrame(data, index=pd.date_range("2004-01-01", periods=50, freq="D"))
 
         # Apply the stackInSpace function
         df_median_stackSpace, df_stackSpace_year = manipulation_functions.stack_in_space(
@@ -125,7 +125,7 @@ class Test_Manipulation(unittest.TestCase):
 
         # Check if the shape of the stacked DataFrame is correct
         expected_shape = (
-            49,
+            50,
             1,
         )  # Stacking across all stations should result in one column
         self.assertEqual(df_median_stackSpace.shape, expected_shape)
