@@ -422,3 +422,39 @@ class Test_Manipulation(unittest.TestCase):
 
         # Check if the input DataFrame is not modified
         self.assertTrue(df.equals(df_copy))
+
+    def test_returns_dataframe(self):
+            def create_mock_stack():
+                np.random.seed(42)
+                data = np.random.rand(100, 3)
+                dates = pd.date_range(start="2023-01-01", periods=100, freq="D")
+                stack = pd.DataFrame(data, index=dates, columns=["A", "B", "C"])
+                return stack
+            stack = create_mock_stack()
+            result = manipulation_functions.filter_data(stack)
+            self.assertIsInstance(result, pd.DataFrame)
+
+    def test_same_shape(self):
+        def create_mock_stack():
+            np.random.seed(42)
+            data = np.random.rand(100, 3)
+            dates = pd.date_range(start="2023-01-01", periods=100, freq="D")
+            stack = pd.DataFrame(data, index=dates, columns=["A", "B", "C"])
+            return stack
+        stack = create_mock_stack()
+        result = manipulation_functions.filter_data(stack)
+        self.assertEqual(result.shape, stack.shape)
+
+
+    def test_filters_data(self):
+        def create_mock_stack():
+            np.random.seed(42)
+            data = np.random.rand(100, 3)
+            dates = pd.date_range(start="2023-01-01", periods=100, freq="D")
+            stack = pd.DataFrame(data, index=dates, columns=["A", "B", "C"])
+            return stack
+        stack = create_mock_stack()
+        result = manipulation_functions.filter_data(stack)
+
+        for column in stack.columns:
+            self.assertFalse(np.array_equal(result[column], stack[column]))
