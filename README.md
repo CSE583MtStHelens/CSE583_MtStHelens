@@ -106,9 +106,6 @@ Some abbreviations:<br>
 │       └── synthetic_data.csv
 ├── mtsthelens
 │   ├── __init__.py
-│   │   ├── manipulation_functions.cpython-312.pyc
-│   │   ├── plotting_functions.cpython-312.pyc
-│   │   └── preprocessing_functions.cpython-312.pyc
 │   ├── manipulation_functions.py
 │   ├── plotting_functions.py
 │   └── preprocessing_functions.py
