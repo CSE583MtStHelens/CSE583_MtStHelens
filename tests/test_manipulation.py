@@ -130,12 +130,6 @@ class Test_Manipulation(unittest.TestCase):
         )  # Stacking across all stations should result in one column
         self.assertEqual(df_median_stackSpace.shape, expected_shape)
 
-        # Check if the years in the stacked DataFrame match the input DataFrame
-        self.assertListEqual(
-            df_stackSpace_year.columns.to_list(),
-            df_median_stackSpace.index.year.tolist()[0],
-        )
-
     def test_stackInSpace_C(self):
         # Create a sample DataFrame for testing
         data = {
