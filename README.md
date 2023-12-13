@@ -1,7 +1,7 @@
 # CSE583_MtStHelens
 
 ## Background
-<img src="mtsthelens.gif" width="50%" height="50%"/>
+<img align="center" src="mtsthelens.gif" width="50%" height="50%"/>
 Mount St. Helens, located in the Cascade Range, is a stratovolcano with a significant eruption history. The eruption of 2004 lasted for four years and began with a notable shallow earthquake swarm on September 23, 2004. Just one week later, the first explosion occurred on October 1, 2004. Subsequent months saw increased seismic activity at the volcano, including volcanic earthquakes, tremors, and debris flow. These volcanic events exhibited a dominant frequency of between 1 and 10 Hz. This heightened volcanic activity continued over the next two years (2005 and 2006), during which multiple domes formed within the crater (figure below, gray period). From image data, the magma extrusion rate was estimated. However, in line with the decreased seismicity, the magma extrusion rates also declined. Volcanologists officially declared the end of the eruption in February 2008. 
 <br>
 <br>
